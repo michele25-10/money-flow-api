@@ -12,7 +12,7 @@ app.use(express.json());
 
 //Aggiunto il middleware
 //app.use("/api/contacts", require("./routes/contactRoutes"))
-//app.use("/api/users", require("./routes/userRoutes"))
+app.use("/api/users", require("./routes/users.route"));
 
 //middleware degli errori
 app.use(errorHandler);
