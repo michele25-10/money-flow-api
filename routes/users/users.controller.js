@@ -10,11 +10,6 @@ const conn = require('../../config/dbConnection');
 loginUser = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-        res.status(400);
-        throw new Error("Tutti i campi sono obbligatori");
-    }
-
     const mysql = "SELECT id, password, username, auth, level FROM `user` WHERE username = '" + username + "' AND status='0'; ";
 
     await conn.query(mysql, function (err, rows) {
