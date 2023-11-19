@@ -1,0 +1,5 @@
+#cartella node modules
+node_modules
+
+#file env
+.env
