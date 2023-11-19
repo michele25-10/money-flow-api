@@ -35,7 +35,6 @@ data date not null,
 importo double not null, 
 tipo_pagamento int not null,
 id_categoria int unsigned not null,
-proprietario_soldi int unsigned not null,
 documento BLOB, 
 FOREIGN KEY (id_utente)
     REFERENCES `user`(id),
@@ -47,3 +46,4 @@ create table categoria(
 id INT UNSIGNED NOT NULL   AUTO_INCREMENT  PRIMARY key,
 nome nvarchar(30) not null
 );
+
