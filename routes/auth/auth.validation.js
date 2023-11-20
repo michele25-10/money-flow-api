@@ -6,4 +6,4 @@ const login = Joi.object({
     password: Joi.string().required()
 });
 
-module.exports = login;
+module.exports = { login };
