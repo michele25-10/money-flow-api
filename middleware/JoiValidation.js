@@ -1,7 +1,7 @@
 //* Include joi to check error type 
 const Joi = require('joi')
 
-module.exports = function (validator) {
+const validate = function (validator) {
     return async function (req, res, next) {
         try {
             const validated = validator.validateAsync(req.body)
@@ -9,8 +9,10 @@ module.exports = function (validator) {
             next()
         } catch (err) {
             if (err.isJoi)
-                return next(createHttpError(422, { message: err.message }))
-            next(createHttpError(500))
+                return next()
+            next()
         }
     }
 }
+
+module.exports = validate;  
