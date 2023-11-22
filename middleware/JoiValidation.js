@@ -34,7 +34,7 @@ const validation = (schema) => {
             req.params = joiValidate(paramsValidate, req.params, res);
         }
 
-        if (res.statusCode) {
+        if (res.statusCode === constants.VALIDATION_ERROR) {
             errorHandler("Validation Error", req, res, next);
         } else {
             next();
