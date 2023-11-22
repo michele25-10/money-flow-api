@@ -8,7 +8,11 @@ const User = {
             if (err) {
                 throw new Error(err);
             }
-            value = rows;
+            if (rows.length == 1) {
+                value = rows[0];
+            } else {
+                value = null;
+            }
         })
         return value;
     }
