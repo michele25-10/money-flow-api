@@ -20,10 +20,10 @@ loginUser = asyncHandler(async (req, res) => {
                 const accessToken = jwt.sign({
                     /*Payload incorporato all'interno del token */
                     user: {
-                        id: rows[0].id,
-                        username: rows[0].username,
-                        auth: rows[0].auth,
-                        level: rows[0].level
+                        id: objUser.id,
+                        username: objUser.username,
+                        auth: objUser.auth,
+                        level: objUser.level
                     }
                 }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
             } else {
