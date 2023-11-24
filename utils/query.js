@@ -5,7 +5,7 @@ const query = async (mysql) => {
     const result = new Promise((resolve, reject) => {
         conn.query(mysql, (err, rows) => {
             if (err) {
-                reject(err)
+                reject(err);
             } else {
                 resolve(rows);
             }
@@ -17,6 +17,5 @@ const query = async (mysql) => {
 
     return sqlResult;
 }
-
 
 module.exports = query; 

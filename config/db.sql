@@ -5,7 +5,10 @@ use moneyFlow;
 create table log(
     id int unsigned not null auto_increment primary key, 
     ip_address varchar(15), 
-    status bit not null
+    status bit not null,
+    token varchar(255) null,
+    body varchar(255) null,
+    dataora datetime not null 
 );
 
 create table famiglia(
