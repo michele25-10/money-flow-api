@@ -1,4 +1,3 @@
-//* validators/post.validator.js
 const Joi = require('joi');
 
 const login = {
@@ -8,4 +7,11 @@ const login = {
     })
 };
 
-module.exports = { login };
+const changePassword = {
+    body: Joi.object().keys({
+        password: Joi.string().required(),
+        confirmPassword: Joi.string().valid(Joi.ref('password')).required().strict()
+    })
+}
+
+module.exports = { login, changePassword };

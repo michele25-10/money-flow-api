@@ -8,7 +8,7 @@ const Log = require('../../models/log.model');
 //@desc accedere con un utente
 //@route POST /api/users/login
 //@access public
-loginUser = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
 
     const hashedPassword = hash(password);
@@ -26,7 +26,7 @@ loginUser = asyncHandler(async (req, res) => {
                     level: objUser.level
                 }
             }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
-            await Log.setLog(req.ip, true, access5Token, JSON.stringify(req.body));
+            await Log.setLog(req.ip, true, accessToken, JSON.stringify(req.body));
             res.status(200).send({
                 accessToken: accessToken
             });
@@ -40,4 +40,15 @@ loginUser = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { loginUser };
+const changePassword = asyncHandler(async (req, res) => {
+    const { password } = req.body;
+    const hashedPassword = hash(password);
+    const result = await User.changePassword(hashedPassword, req.user.id);
+    if (result) {
+        res.status(201).send({ message: "Password cambiata" });
+    } else {
+        res.status(constants.SERVER_ERROR).send({ message: "Internal server error" });
+    }
+});
+
+module.exports = { loginUser, changePassword };

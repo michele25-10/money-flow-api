@@ -10,6 +10,15 @@ const User = {
         } else {
             return false;
         }
+    },
+    changePassword: async (password, id) => {
+        const mysql = `UPDATE \`user\` SET password = '${password}' WHERE id = '${id}'`;
+        const result = await query(mysql, queryMethods.UPDATE);
+        if (result === 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

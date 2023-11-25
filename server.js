@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const errorHandler = require("./middleware/errorHandler");
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 const port = process.env.PORT || 5000; //prendo la porta dal file .env
 
 //middleware

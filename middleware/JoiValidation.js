@@ -18,7 +18,7 @@ const joiValidate = (schema, obj, res) => {
     }
 };
 
-const validation = (schema) => {
+const validate = (schema) => {
     return async function (req, res, next) {
         // Oggetto da validare
         if ('body' in schema) {
@@ -42,4 +42,4 @@ const validation = (schema) => {
     }
 }
 
-module.exports = validation;  
+module.exports = validate;  
