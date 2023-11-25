@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../../models/user.model');
-const constants = require('../../constants');
+const { constants } = require('../../enums/constants');
 const { hash } = require('../../utils/crypto');
 const Log = require('../../models/log.model');
 
@@ -26,17 +26,17 @@ loginUser = asyncHandler(async (req, res) => {
                     level: objUser.level
                 }
             }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
-            await Log.setLog(req.ip, true, accessToken, JSON.stringify(req.body));
+            await Log.setLog(req.ip, true, access5Token, JSON.stringify(req.body));
             res.status(200).send({
                 accessToken: accessToken
             });
         } else {
-            await setLog(req.ip, false, null, JSON.stringify(req.body));
-            res.status(constants.UNAUTHORIZED);
+            await Log.setLog(req.ip, false, null, JSON.stringify(req.body));
+            res.status(constants.UNAUTHORIZED).send({ message: "Credenziali erratte" });
         }
     } else {
-        await setLog(req.ip, false, null, JSON.stringify(req.body));
-        res.status(constants.NOT_FOUND);
+        await Log.setLog(req.ip, false, null, JSON.stringify(req.body));
+        res.status(constants.NOT_FOUND).send({ message: "Credenziali erratte" });
     }
 });
 

@@ -1,5 +1,5 @@
 //* Include joi to check error type 
-const { constants } = require('../constants');
+const { constants } = require('../enums/constants');
 const errorHandler = require('./errorHandler');
 
 const joiValidate = (schema, obj, res) => {
