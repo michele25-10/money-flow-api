@@ -25,6 +25,7 @@ password varchar(64) not null,
 auth int not null,
 level int not null,
 id_famiglia int unsigned not null,
+img_profilo BLOB null,
 FOREIGN KEY (id_famiglia)
     REFERENCES famiglia(id)
 );
