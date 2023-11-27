@@ -47,7 +47,7 @@ const changePassword = asyncHandler(async (req, res) => {
     if (result) {
         res.status(201).send({ message: "Password cambiata" });
     } else {
-        res.status(constants.SERVER_ERROR).send({ message: "Internal server error" });
+        res.status(constants.SERVER_ERROR).send({ message: "Errore del server" });
     }
 });
 

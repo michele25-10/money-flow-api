@@ -7,6 +7,8 @@ const validate = require('../../middleware/JoiValidation');
 const validateToken = require('../../middleware/validateToken');
 
 router.post('/login', validate(userValidation.login), loginUser);
+
+router.all('*', validateToken);
 router.put("/change-password", validate(userValidation.changePassword), changePassword);
 
 module.exports = router;

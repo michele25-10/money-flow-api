@@ -15,12 +15,11 @@ const query = async (mysql, method) => {
     await result.then((value) => {
         sqlResult = value;
     }).catch((err) => console.log(err));
-    switch (method) {
-        case queryMethods.SELECT:
-            return sqlResult;
 
-        case (queryMethods.INSERT || queryMethods.UPDATE || queryMethods.DELETE):
-            return sqlResult.affectedRows;
+    if (method === queryMethods.SELECT) {
+        return sqlResult;
+    } else if (method === queryMethods.INSERT || method === queryMethods.UPDATE || method === queryMethods.DELETE) {
+        return sqlResult.affectedRows;
     }
 }
 
