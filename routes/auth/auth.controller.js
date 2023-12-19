@@ -25,7 +25,7 @@ const loginUser = asyncHandler(async (req, res) => {
                     auth: objUser.auth,
                     level: objUser.level
                 }
-            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: req.useragent.isMobile ? "8760h" : "1h" });
             await Log.setLog(req.ip, true, accessToken, JSON.stringify(req.body));
             res.status(200).send({
                 accessToken: accessToken

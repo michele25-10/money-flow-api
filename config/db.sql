@@ -38,6 +38,7 @@ data date not null,
 `desc` varchar(100),
 importo double not null, 
 tipo_pagamento int not null,
+soldi_propri bit default 0 not null,
 id_categoria int unsigned not null,
 documento BLOB, 
 FOREIGN KEY (id_utente)
