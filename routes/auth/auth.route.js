@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const { loginUser, changePassword } = require('./auth.controller');
-const userValidation = require('./auth.validation');
+const authController = require('./auth.controller');
+const authValidation = require('./auth.validation');
 const validate = require('../../middleware/JoiValidation');
 const validateToken = require('../../middleware/validateToken');
 
-router.post('/login', validate(userValidation.login), loginUser);
+router.post('/login', validate(authValidation.login), authController.loginUser);
 
 router.all('*', validateToken);
-router.put("/change-password", validate(userValidation.changePassword), changePassword);
+router.put("/change-password", validate(authValidation.changePassword), authController.changePassword);
 
 module.exports = router;
