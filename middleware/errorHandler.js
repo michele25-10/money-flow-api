@@ -18,9 +18,6 @@ const errorHandler = (err, req, res, next) => {
         case constants.SERVER_ERROR:
             res.json({ title: "Server error", message: err.message, stackTrace: err.stack });
             break;
-        default:
-            console.log("Non ci sono errori!");
-            break;
     }
 };
 module.exports = errorHandler;

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../../models/user.model');
 const { constants } = require('../../enums/constants');
-const { hash } = require('../../utils/crypto');
+const { hash, encrypt, decrypt } = require('../../utils/crypto');
 const Log = require('../../models/log.model');
 const { setLogOperazione } = require('../../utils/setLog');
 const { tipoOperazioni } = require('../../enums/tipo_operazioni');
@@ -38,14 +38,20 @@ const loginUser = asyncHandler(async (req, res) => {
                 body: req.body,
                 messaggioErrore: null
             });
-            
-            if (!req.user.ricordami) {
-                res.status(200).send({
-                    accessToken: accessToken
-                });
-            } else {
 
+            if (req.body.ricordami) {
+                const credentialsString = JSON.stringify({ famiglia, email, password });
+                const hashCredentials = encrypt(credentialsString, process.env.SECRETKEY);
+                //gli ultimi 32 caratteri corrisponderanno all'iv
+                res.status(200).send({
+                    accessToken: accessToken,
+                    ricordami: hashCredentials.encryptedText + hashCredentials.iv
+                })
             }
+
+            res.status(200).send({
+                accessToken: accessToken
+            });
         } else {
             res.status(constants.UNAUTHORIZED);
             throw Error("Credenziali erratte");
