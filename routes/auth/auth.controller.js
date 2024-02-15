@@ -20,7 +20,7 @@ const loginUser = asyncHandler(async (req, res) => {
     if (objUser) {
         if (hashedPassword === objUser.password) {
             const accessToken = jwt.sign({
-                /*Payload incorporato all'interno del token */
+                /* Payload incorporato all'interno del token */
                 user: {
                     idu: objUser.id,
                     genitore: objUser.flag_genitore ? true : false,
@@ -29,7 +29,7 @@ const loginUser = asyncHandler(async (req, res) => {
                     nome: objUser.nome,
                     cognome: objUser.cognome,
                 }
-            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: req.body.mobile ? "8760h" : "1h" });
+            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: req.body.mobile ? "4320h" : "1h" });
             await setLogOperazione({
                 idu: objUser.id,
                 tipoOperazione: tipoOperazioni.login,
@@ -38,30 +38,21 @@ const loginUser = asyncHandler(async (req, res) => {
                 body: req.body,
                 messaggioErrore: null
             });
-            res.status(200).send({
-                accessToken: accessToken
-            });
+            
+            if (!req.user.ricordami) {
+                res.status(200).send({
+                    accessToken: accessToken
+                });
+            } else {
+
+            }
         } else {
-            await setLogOperazione({
-                idUtente: objUser.id,
-                tipoOperazione: tipoOperazioni.login,
-                ipAddress: req.ip,
-                token: accessToken,
-                body: req.body,
-                messaggioErrore: "Credenziali Erratte"
-            });
-            res.status(constants.UNAUTHORIZED).send({ message: "Credenziali erratte" });
+            res.status(constants.UNAUTHORIZED);
+            throw Error("Credenziali erratte");
         }
     } else {
-        await setLogOperazione({
-            idUtente: objUser.id,
-            tipoOperazione: tipoOperazioni.login,
-            ipAddress: req.ip,
-            token: accessToken,
-            body: req.body,
-            messaggioErrore: "Credenziali Erratte"
-        });
-        res.status(constants.NOT_FOUND).send({ message: "Credenziali erratte" });
+        res.status(constants.NOT_FOUND);
+        throw Error("Credenziali erratte");
     }
 });
 
@@ -72,7 +63,7 @@ const changePassword = asyncHandler(async (req, res) => {
     if (result) {
         res.status(201).send({ message: "Password cambiata" });
     } else {
-        res.status(constants.SERVER_ERROR).send({ message: "Errore del server" });
+        res.status(constants.SERVER_ERROR);
     }
 });
 

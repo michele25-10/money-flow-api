@@ -1,4 +1,5 @@
 const express = require('express');
+require('express-async-errors');
 const app = express();
 const errorHandler = require("./middleware/errorHandler");
 require('dotenv').config();
@@ -14,4 +15,4 @@ app.use(errorHandler);
 
 app.listen(port, () => {
     console.log('Server running on port ' + port);
-}); 
+});
