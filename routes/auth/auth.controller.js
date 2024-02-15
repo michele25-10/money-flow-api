@@ -4,38 +4,63 @@ const User = require('../../models/user.model');
 const { constants } = require('../../enums/constants');
 const { hash } = require('../../utils/crypto');
 const Log = require('../../models/log.model');
+const { setLogOperazione } = require('../../utils/setLog');
+const { tipoOperazioni } = require('../../enums/tipo_operazioni');
 
 //@desc accedere con un utente
 //@route POST /api/users/login
 //@access public
 const loginUser = asyncHandler(async (req, res) => {
-    const { username, password } = req.body;
+    const { famiglia, email, password } = req.body;
 
     const hashedPassword = hash(password);
 
-    const objUser = await User.login(username);
+    const objUser = await User.login(email, famiglia);
 
     if (objUser) {
         if (hashedPassword === objUser.password) {
             const accessToken = jwt.sign({
                 /*Payload incorporato all'interno del token */
                 user: {
-                    id: objUser.id,
-                    username: objUser.username,
-                    auth: objUser.auth,
-                    level: objUser.level
+                    idu: objUser.id,
+                    genitore: objUser.flag_genitore ? true : false,
+                    idf: objUser.id_famiglia,
+                    nome_famiglia: famiglia,
+                    nome: objUser.nome,
+                    cognome: objUser.cognome,
                 }
-            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: req.useragent.isMobile ? "8760h" : "1h" });
-            await Log.setLog(req.ip, true, accessToken, JSON.stringify(req.body));
+            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: req.body.mobile ? "8760h" : "1h" });
+            await setLogOperazione({
+                idu: objUser.id,
+                tipoOperazione: tipoOperazioni.login,
+                ipAddress: req.ip,
+                token: accessToken,
+                body: req.body,
+                messaggioErrore: null
+            });
             res.status(200).send({
                 accessToken: accessToken
             });
         } else {
-            await Log.setLog(req.ip, false, null, JSON.stringify(req.body));
+            await setLogOperazione({
+                idUtente: objUser.id,
+                tipoOperazione: tipoOperazioni.login,
+                ipAddress: req.ip,
+                token: accessToken,
+                body: req.body,
+                messaggioErrore: "Credenziali Erratte"
+            });
             res.status(constants.UNAUTHORIZED).send({ message: "Credenziali erratte" });
         }
     } else {
-        await Log.setLog(req.ip, false, null, JSON.stringify(req.body));
+        await setLogOperazione({
+            idUtente: objUser.id,
+            tipoOperazione: tipoOperazioni.login,
+            ipAddress: req.ip,
+            token: accessToken,
+            body: req.body,
+            messaggioErrore: "Credenziali Erratte"
+        });
         res.status(constants.NOT_FOUND).send({ message: "Credenziali erratte" });
     }
 });

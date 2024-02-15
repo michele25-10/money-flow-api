@@ -2,9 +2,14 @@ const query = require('../utils/query');
 const { queryMethods } = require('../enums/queryMethods');
 
 const User = {
-    login: async (username) => {
-        const mysql = `SELECT id, password, username, auth, level FROM \`user\` WHERE username = '${username}'`;
+    login: async (email, famiglia) => {
+        const mysql = `select u.id, u.nome, u.cognome, u.password, u.flag_genitore, f.id as id_famiglia 
+        from utente u
+        inner join famiglia f on f.nome LIKE '${famiglia}' and f.id = u.id_famiglia 
+        where u.email = '${email}';`;
+
         const result = await query(mysql, queryMethods.SELECT);
+
         if (result.length == 1) {
             return result[0];
         } else {

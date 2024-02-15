@@ -2,8 +2,11 @@ const Joi = require('joi');
 
 const login = {
     body: Joi.object().keys({
-        username: Joi.string().max(30).required(),
-        password: Joi.string().required()
+        famiglia: Joi.string().max(30).required(),
+        email: Joi.string().max(50).required(),
+        password: Joi.string().required(),
+        mobile: Joi.boolean(),
+        ricordami: Joi.boolean()
     })
 };
 

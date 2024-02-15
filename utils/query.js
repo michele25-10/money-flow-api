@@ -14,7 +14,10 @@ const query = async (mysql, method) => {
     });
     await result.then((value) => {
         sqlResult = value;
-    }).catch((err) => console.log(err));
+    }).catch((err) => {
+        console.log(err);
+        throw new Error(err);
+    });
 
     if (method === queryMethods.SELECT) {
         return sqlResult;
