@@ -1,6 +1,7 @@
 const { constants } = require('../enums/constants');
 const errorHandler = (err, req, res, next) => {
     //se abbiamo uno statusCode rispondiamo con quello altrimenti con un errore interno al server (500)
+    
     const statusCode = res.statusCode ? res.statusCode : 500;
     switch (statusCode) {
         case constants.VALIDATION_ERROR:

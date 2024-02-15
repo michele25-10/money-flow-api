@@ -15,7 +15,7 @@ const query = async (mysql, method) => {
     await result.then((value) => {
         sqlResult = value;
     }).catch((err) => {
-        console.log(err);
+        console.error(err);
         throw new Error(err);
     });
 
