@@ -6,15 +6,18 @@ const joiValidate = (schema, obj, res) => {
     try {
         const value = schema.validate(obj);
         if (value.error) {
-            throw new Error(constants.VALIDATION_ERROR);
+            res.status(constants.VALIDATION_ERROR);
+            throw Error(value.error);
         } else {
             return value.value;
         };
     } catch (err) {
         if (err.isJoi) {
             res.status(constants.VALIDATION_ERROR);
+            throw Error(err.isJoi);
         }
-        res.status(constants.VALIDATION_ERROR);
+        console.error(err);
+        throw Error(err);
     }
 };
 
@@ -34,10 +37,10 @@ const validate = (schema) => {
             req.params = joiValidate(paramsValidate, req.params, res);
         }
 
-        if (res.statusCode === constants.VALIDATION_ERROR) {
-            errorHandler("Validation Error", req, res, next);
-        } else {
+        if (res.statusCode === 200) {
             next();
+        } else {
+            throw Error()
         }
     }
 }
