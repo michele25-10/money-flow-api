@@ -1,19 +1,13 @@
-const query = require('../utils/query');
-const { queryMethods } = require('../enums/queryMethods');
+const connFunction = require('../utils/executeMySql');
 
 const User = {
     login: async (email, famiglia) => {
-        /*const mysql = `select u.id, u.nome, u.cognome, u.password, u.flag_genitore, f.id as id_famiglia 
-        from utente u
-        inner join famiglia f on f.nome LIKE '${famiglia}' and f.id = u.id_famiglia 
-        where u.email = '${email}';`;*/
-
         const mysql = `select u.id, u.nome, u.cognome, u.password, u.flag_genitore, f.id as id_famiglia 
         from utente u
         inner join famiglia f on f.nome LIKE @famiglia and f.id = u.id_famiglia 
         where u.email = @email;`;
 
-        const result = await query(mysql, { email, famiglia });
+        const result = await connFunction.query(mysql, { email, famiglia });
 
         if (result.length == 1) {
             return result[0];
@@ -23,7 +17,12 @@ const User = {
     },
     changePassword: async (password, id) => {
         const mysql = `UPDATE \`user\` SET password = '${password}' WHERE id = '${id}'`;
-        const result = await query(mysql, queryMethods.UPDATE);
+        const result = await connFunction.update(
+            "utente",
+            { password },
+            "id=@id",
+            { id }
+        );
         if (result === 1) {
             return true;
         } else {

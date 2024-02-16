@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../../models/user.model');
 const { constants } = require('../../enums/constants');
-const { hash, encrypt, decrypt } = require('../../utils/crypto');
-const Log = require('../../models/log.model');
+const { hash, encrypt } = require('../../utils/crypto');
 const { setLogOperazione } = require('../../utils/setLog');
 const { tipoOperazioni } = require('../../enums/tipo_operazioni');
 
