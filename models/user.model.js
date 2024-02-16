@@ -16,18 +16,22 @@ const User = {
         }
     },
     changePassword: async (password, id) => {
-        const mysql = `UPDATE \`user\` SET password = '${password}' WHERE id = '${id}'`;
         const result = await connFunction.update(
             "utente",
             { password },
             "id=@id",
             { id }
         );
-        if (result === 1) {
+        if (result.affectedRows === 1) {
             return true;
         } else {
             return false;
         }
+    },
+    getPassword: async (id) => {
+        const mysql = "select password from utente where id=@id";
+        const result = await connFunction.query(mysql, { id });
+        return result[0].password;
     }
 }
 

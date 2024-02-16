@@ -12,8 +12,9 @@ const login = {
 
 const changePassword = {
     body: Joi.object().keys({
-        password: Joi.string().required(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required().strict()
+        oldPassword: Joi.string().required(),
+        newPassword: Joi.string().min(8).pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$')).required(),
+        confirmPassword: Joi.string().valid(Joi.ref('newPassword')).required().strict()
     })
 }
 

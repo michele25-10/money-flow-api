@@ -109,7 +109,7 @@ const connFunction = {
         }
 
         let mysql = `UPDATE ${tabella} SET `;
-        if (typeof rows === 'object') {
+        if (typeof columns === 'object') {
             for (const column in columns) {
                 if (typeof columns[column] === 'number') {
                     mysql += `${column} = ${columns[column]}, `;

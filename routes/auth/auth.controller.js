@@ -62,13 +62,26 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const changePassword = asyncHandler(async (req, res) => {
-    const { password } = req.body;
-    const hashedPassword = hash(password);
-    const result = await User.changePassword(hashedPassword, req.user.id);
-    if (result) {
-        res.status(201).send({ message: "Password cambiata" });
+    const { newPassword, oldPassword } = req.body;
+
+    if (newPassword === oldPassword) {
+        res.status(201);
+        res.send({ message: "Password modificata con successo" });
+        return;
+    }
+
+    if (hash(oldPassword) === await User.getPassword(req.user.idu)) {
+        const hashedPassword = hash(newPassword);
+        const result = await User.changePassword(hashedPassword, req.user.idu);
+        if (result) {
+            res.status(201).send({ message: "Password modifica con successo" });
+        } else {
+            res.status(constants.SERVER_ERROR);
+            throw Error();
+        }
     } else {
-        res.status(constants.SERVER_ERROR);
+        res.status(constants.FORBIDDEN);
+        throw Error("La vecchia password non è corretta");
     }
 });
 
