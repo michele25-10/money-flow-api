@@ -22,3 +22,9 @@ Le spese sono distinte dal tipo di pagamento: contante o bancomat.
 Una ulteriore funzionalità utile sarebbe quella di duplicare una spesa.
 
 L'utente potrà anche scaricare dei pdf o file excel con le spese di ogni mese, questo per avere dati tangibili su carta.
+
+# Documentation
+
+## Errore
+
+Per la gestione degli errori è stato usato il middleware errorHandler, quest'ultimo viene eseguito quando viene lanciata una eccezione all'interno del codice; se poi lo status della risposta è di particolari tipi all'ora invia un errore particolare.

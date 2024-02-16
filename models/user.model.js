@@ -3,12 +3,17 @@ const { queryMethods } = require('../enums/queryMethods');
 
 const User = {
     login: async (email, famiglia) => {
-        const mysql = `select u.id, u.nome, u.cognome, u.password, u.flag_genitore, f.id as id_famiglia 
+        /*const mysql = `select u.id, u.nome, u.cognome, u.password, u.flag_genitore, f.id as id_famiglia 
         from utente u
         inner join famiglia f on f.nome LIKE '${famiglia}' and f.id = u.id_famiglia 
-        where u.email = '${email}';`;
+        where u.email = '${email}';`;*/
 
-        const result = await query(mysql, queryMethods.SELECT);
+        const mysql = `select u.id, u.nome, u.cognome, u.password, u.flag_genitore, f.id as id_famiglia 
+        from utente u
+        inner join famiglia f on f.nome LIKE @famiglia and f.id = u.id_famiglia 
+        where u.email = @email;`;
+
+        const result = await query(mysql, { email, famiglia });
 
         if (result.length == 1) {
             return result[0];
