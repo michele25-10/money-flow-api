@@ -40,7 +40,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
             if (req.body.ricordami) {
                 const credentialsString = JSON.stringify({ famiglia, email, password });
-                const hashCredentials = encrypt(credentialsString, process.env.SECRETKEY);
+                const hashCredentials = encrypt(credentialsString, process.env.SECRET_KEY);
                 //gli ultimi 32 caratteri corrisponderanno all'iv
                 res.status(200).send({
                     accessToken: accessToken,

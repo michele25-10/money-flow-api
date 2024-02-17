@@ -6,11 +6,11 @@ const hash = (stringa) => {
     return result;
 }
 
-function generateSecretKey(secretKey) {
+const generateSecretKey = (secretKey) => {
     return crypto.createHash('sha256').update(secretKey).digest();
 }
 
-function encrypt(text, secretKey) {
+const encrypt = (text, secretKey) => {
     const iv = crypto.randomBytes(16);
     secretKey = generateSecretKey(secretKey);
     const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
@@ -23,7 +23,7 @@ function encrypt(text, secretKey) {
 }
 
 // Funzione per decrittografare un testo con AES
-function decrypt(encryptedData, secretKey) {
+const decrypt = (encryptedData, secretKey) => {
     secretKey = generateSecretKey(secretKey);
     const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey), Buffer.from(encryptedData.iv, 'hex'));
     let decrypted = decipher.update(encryptedData.encryptedText, 'hex', 'utf8');
