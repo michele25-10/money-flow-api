@@ -10,7 +10,7 @@ const postExpense = {
         categoria: Joi.number().integer().required(),
         document: Joi.string(),
     })
-}
+};
 
 const putExpense = {
     params: Joi.object().keys({
@@ -25,13 +25,19 @@ const putExpense = {
         categoria: Joi.number().integer().required(),
         document: Joi.string(),
     })
-}
+};
 
 const deleteExpense = {
     params: Joi.object().keys({
         id: Joi.number().integer().required(),
     })
-}
+};
+
+const getExpenseById = {
+    params: Joi.object().keys({
+        id: Joi.number().integer().required(),
+    })
+};
 
 
-module.exports = { postExpense, putExpense, deleteExpense };
+module.exports = { postExpense, putExpense, deleteExpense, getExpenseById };

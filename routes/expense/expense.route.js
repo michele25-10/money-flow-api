@@ -9,6 +9,7 @@ const validateToken = require('../../middleware/validateToken');
 router.all('*', validateToken);
 router.post("/", validate(expenseValidation.postExpense), expenseController.postExpense);
 router.put("/:id", validate(expenseValidation.putExpense), expenseController.putExpense);
-router.put("/:id", validate(expenseValidation.deleteExpense), expenseController.deleteExpense);
+router.delete("/:id", validate(expenseValidation.deleteExpense), expenseController.deleteExpense);
+router.get("/:id", validate(expenseValidation.getExpenseById), expenseController.getExpenseById); //
 
 module.exports = router;

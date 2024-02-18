@@ -1,8 +1,5 @@
-const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const Expense = require('../../models/expense.model');
-const { constants } = require('../../enums/constants');
-const { hash, encrypt } = require('../../utils/crypto');
 const { setLogOperazione } = require('../../utils/setLog');
 const { tipoOperazioni } = require('../../enums/tipo_operazioni');
 
@@ -38,7 +35,7 @@ const postExpense = asyncHandler(async (req, res) => {
 });
 
 //@desc update spesa
-//@route PUT /api/expense/
+//@route PUT /api/expense/:id
 //@access private
 const putExpense = asyncHandler(async (req, res) => {
     const result = Expense.updateExpense({ ...req.body, idu: req.user.idu, idRow: req.params.id });
@@ -69,7 +66,7 @@ const putExpense = asyncHandler(async (req, res) => {
 });
 
 //@desc delete spesa
-//@route DELETE /api/expense/
+//@route DELETE /api/expense/:id
 //@access private
 const deleteExpense = asyncHandler(async (req, res) => {
     const result = Expense.deleteExpense({ id: req.params.id });
@@ -99,4 +96,17 @@ const deleteExpense = asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Spesa eliminata con successo' });
 });
 
-module.exports = { postExpense, putExpense, deleteExpense };
+//@desc delete spesa
+//@route GET /api/expense/
+//@access private
+const getExpenseById = asyncHandler(async (req, res) => {
+    const result = Expense.selectExpenseById({ id: req.params.id, idu: req.user.idu, flagGenitore: req.user.genitore });
+
+    if (result.length != 1) {
+        throw new Error();
+    }
+
+    res.status(200).json(result);
+});
+
+module.exports = { postExpense, putExpense, deleteExpense, getExpenseById };

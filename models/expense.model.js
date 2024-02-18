@@ -34,6 +34,19 @@ const Expense = {
         const result = await connFunction.delete("spesa", "id=@id", { id });
         return result;
     },
+    selectExpenseById: async ({ id, idu, flagGenitore }) => {
+        const mysql = `
+        select concat(u.nome, " ", u.cognome) as nome_cognome, s.luogo, s.\`data\`, s.importo , s.tipo_pagamento, s.descrizione, c.nome as categoria
+        from spesa s 
+        inner join utente u on u.id = s.id_utente 
+        inner join categoria c on c.id = s.id_categoria 
+        where s.id=@id ${flagGenitore ? '' : 'and s.id_utente=@idu'}`;
+        const result = await connFunction.query(mysql, {
+            id,
+            idu
+        })
+        return result;
+    }
 }
 
 module.exports = Expense;   
