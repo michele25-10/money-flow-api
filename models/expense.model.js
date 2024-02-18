@@ -13,6 +13,22 @@ const Expense = {
             id_utente
         });
         return result;
+    },
+    updateExpense: async ({ luogo, data, descrizione, importo, tipoPagamento: tipo_pagamento, categoria: id_categoria, documento, idu: id_utente, idRow: id }) => {
+        const result = await connFunction.update("spesa", {
+            luogo,
+            data,
+            descrizione,
+            importo,
+            tipo_pagamento,
+            id_categoria,
+            documento,
+            id_utente
+        }, "where id=@id", {
+            id
+        }
+        );
+        return result;
     }
 }
 

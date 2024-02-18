@@ -7,7 +7,7 @@ const validate = require('../../middleware/JoiValidation');
 const validateToken = require('../../middleware/validateToken');
 
 router.all('*', validateToken);
-router.post("/", validate(expenseValidation.addExpense), expenseController.addExpense);
-
+router.post("/", validate(expenseValidation.postExpense), expenseController.postExpense);
+router.put("/:id", validate(expenseValidation.putExpense), expenseController.putExpense);
 
 module.exports = router;
