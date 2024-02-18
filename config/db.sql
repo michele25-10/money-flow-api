@@ -48,6 +48,7 @@ create table log(
 	dataora datetime not null,
     token varchar(255) null,
     body JSON null,
+	tabella varchar(30) null, 
 	messaggio_errore varchar(100) null, 
 	FOREIGN KEY (id_utente)
     	REFERENCES utente(id)

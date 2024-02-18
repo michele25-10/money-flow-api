@@ -7,8 +7,8 @@ const Log = require("../models/log.model");
 * @param token
 * @param messaggioErrore
 */
-const setLogOperazione = async ({ idu, tipoOperazione, ipAddress, token, body, messaggioErrore }) => {
-    await Log.setLog(idu, tipoOperazione, ipAddress, token, JSON.stringify(body), messaggioErrore);
+const setLogOperazione = async ({ idu, tipoOperazione, ipAddress, token, body, messaggioErrore, tabella }) => {
+    await Log.setLog(idu, tipoOperazione, ipAddress, token, JSON.stringify(body), messaggioErrore, tabella);
     return;
 }
 
