@@ -27,5 +27,11 @@ const putExpense = {
     })
 }
 
+const deleteExpense = {
+    params: Joi.object().keys({
+        id: Joi.number().integer().required(),
+    })
+}
 
-module.exports = { postExpense, putExpense };
+
+module.exports = { postExpense, putExpense, deleteExpense };

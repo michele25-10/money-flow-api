@@ -24,12 +24,16 @@ const Expense = {
             id_categoria,
             documento,
             id_utente
-        }, "where id=@id", {
+        }, "id=@id", {
             id
         }
         );
         return result;
-    }
+    },
+    deleteExpense: async ({ id }) => {
+        const result = await connFunction.delete("spesa", "id=@id", { id });
+        return result;
+    },
 }
 
 module.exports = Expense;   

@@ -68,4 +68,35 @@ const putExpense = asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Spesa inserita con successo' });
 });
 
-module.exports = { postExpense, putExpense };
+//@desc delete spesa
+//@route DELETE /api/expense/
+//@access private
+const deleteExpense = asyncHandler(async (req, res) => {
+    const result = Expense.deleteExpense({ id: req.params.id });
+
+    if (result.affectedRows != 1) {
+        setLogOperazione({
+            idu: req.user.idu,
+            tipoOperazione: tipoOperazioni.eliminazione,
+            ipAddress: req.ip,
+            token: req.headers.Authorization || req.headers.authorization,
+            body: req.body,
+            tabella: "spesa",
+            messaggioErrore: "Eliminazione fallita",
+        });
+        throw new Error();
+    }
+
+    setLogOperazione({
+        idu: req.user.idu,
+        tipoOperazione: tipoOperazioni.eliminazione,
+        ipAddress: req.ip,
+        token: req.headers.Authorization || req.headers.authorization,
+        body: req.body,
+        tabella: "spesa",
+    });
+
+    res.status(200).json({ message: 'Spesa eliminata con successo' });
+});
+
+module.exports = { postExpense, putExpense, deleteExpense };
