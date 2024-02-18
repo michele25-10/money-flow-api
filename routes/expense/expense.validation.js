@@ -6,9 +6,9 @@ const postExpense = {
         data: Joi.date().required(),
         importo: Joi.number().precision(2).required(),
         descrizione: Joi.string().max(100),
-        tipoPagamento: Joi.boolean().required(),
+        tipoPagamento: Joi.string().valid("0", "1").required(),
         categoria: Joi.number().integer().required(),
-        document: Joi.string(),
+        documento: Joi.string().allow(null, ""),
     })
 };
 
@@ -21,9 +21,9 @@ const putExpense = {
         data: Joi.date().required(),
         importo: Joi.number().precision(2).required(),
         descrizione: Joi.string().max(100),
-        tipoPagamento: Joi.boolean().required(),
+        tipoPagamento: Joi.string().valid("0", "1").required(),
         categoria: Joi.number().integer().required(),
-        document: Joi.string(),
+        documento: Joi.string().allow(null, ""),
     })
 };
 
