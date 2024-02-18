@@ -109,4 +109,14 @@ const getExpenseById = asyncHandler(async (req, res) => {
     res.status(200).json(result);
 });
 
-module.exports = { postExpense, putExpense, deleteExpense, getExpenseById };
+//@desc delete spesa
+//@route GET /api/expense/
+//@access private
+const getAllExpense = asyncHandler(async (req, res) => {
+    const result = Expense.selectExpense({ idu: req.user.idu, flagGenitore: req.user.genitore });
+
+    res.status(200).json(result);
+});
+
+
+module.exports = { postExpense, putExpense, deleteExpense, getExpenseById, getAllExpense };
