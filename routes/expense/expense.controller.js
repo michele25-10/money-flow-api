@@ -113,7 +113,7 @@ const getExpenseById = asyncHandler(async (req, res) => {
 //@route GET /api/expense/
 //@access private
 const getAllExpense = asyncHandler(async (req, res) => {
-    const result = await Expense.selectExpense({ idu: req.user.idu, flagGenitore: req.user.genitore });
+    const result = await Expense.selectAllExpense({ idu: req.user.idu, flagGenitore: req.user.genitore });
 
     res.status(200).send(result);
 });

@@ -40,7 +40,7 @@ const connFunction = {
     */
     query: async (mysql, arguments) => {
         mysql = stringaQuery(mysql, arguments);
-
+        
         const result = await executeQuery(mysql);
         return result;
     },
