@@ -20,7 +20,7 @@ const Expense = {
     updateExpense: async ({ luogo, data, descrizione, importo, tipoPagamento: tipo_pagamento, categoria: id_categoria, documento, idu: id_utente, idRow: id }) => {
         const result = await connFunction.update("spesa", {
             luogo,
-            data,
+            data: moment(data).format('YYYY-MM-DD'),
             descrizione,
             importo,
             tipo_pagamento,
