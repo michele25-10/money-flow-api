@@ -8,5 +8,5 @@ const validateToken = require('../../middleware/validateToken');
 
 router.all('*', validateToken);
 router.get("/", authorizationController.getAllAuthorization);
-
+router.get("/user/", authorizationController.getAllAuthorizationUser);
 module.exports = router;
