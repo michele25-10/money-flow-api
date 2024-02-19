@@ -32,6 +32,11 @@ const User = {
         const mysql = "select password from utente where id=@id";
         const result = await connFunction.query(mysql, { id });
         return result[0].password;
+    },
+    selectAllUserFamily: async ({ idFamiglia }) => {
+        const mysql = "select id, nome, cognome, telefono, email, img, if(flag_genitore=1, 'true', 'false') as flag_genitore from utente where id_famiglia=@idFamiglia";
+        const result = await connFunction.query(mysql, { idFamiglia });
+        return result;
     }
 }
 

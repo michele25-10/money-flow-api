@@ -12,9 +12,9 @@ const getAllAuthorization = asyncHandler(async (req, res) => {
 //@desc get di tutte le autorizzazioni
 //@route GET /api/authorization/
 //@access private
-const getAllAutorizzazioniUser = asyncHandler(async (req, res) => {
-    const result = await Authorization.selectAllAuthorizationUser();
+const getAllAuthorizationUser = asyncHandler(async (req, res) => {
+    const result = await Authorization.selectAllAuthorizationUser({ idu: req.user.idu });
     res.status(200).send(result);
 });
 
-module.exports = { getAllAuthorization }
+module.exports = { getAllAuthorization, getAllAuthorizationUser }
