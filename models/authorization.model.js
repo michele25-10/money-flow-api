@@ -11,6 +11,10 @@ const Authorization = {
         const result = await connFunction.query(mysql, { idu })
         return result;
     },
+    updateAuthorizationUser: async ({ idu, idAuthorization, valore }) => {
+        const result = await connFunction.update("autorizzazione_utente", { valore }, "id_utente=@idu and id_autorizzazione=@idAuthorization", { idu, idAuthorization },);
+        return result;
+    }
 }
 
 module.exports = Authorization;

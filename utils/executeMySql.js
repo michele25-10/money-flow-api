@@ -40,7 +40,7 @@ const connFunction = {
     */
     query: async (mysql, arguments) => {
         mysql = stringaQuery(mysql, arguments);
-        
+
         const result = await executeQuery(mysql);
         return result;
     },
@@ -122,7 +122,7 @@ const connFunction = {
             throw Error('Invalid type of data: function Insert');
         }
 
-        mysql += `WHERE ${whereCondition}`;
+        mysql += ` WHERE ${whereCondition} `;
 
         mysql = stringaQuery(mysql, arguments);
 
