@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const categoryController = require('./auth.controller');
-//const categoryValidation = require('./auth.validation');
+const categoryController = require('./category.controller');
+//const categoryValidation = require('./category.validation');
 //const validate = require('../../middleware/JoiValidation');
 const validateToken = require('../../middleware/validateToken');
 

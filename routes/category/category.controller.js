@@ -6,8 +6,8 @@ const Category = require('../../models/category.model');
 //@route GET /api/category/
 //@access private
 const getAllCategory = asyncHandler(async (req, res) => {
-    const result = await Category.selectAllCategori();
-    return result;
+    const result = await Category.selectAllCategory();
+    res.status(200).send(result);
 });
 
 module.exports = { getAllCategory }

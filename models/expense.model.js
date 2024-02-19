@@ -39,7 +39,7 @@ const Expense = {
     },
     selectExpenseById: async ({ id, idu, flagGenitore }) => {
         const mysql = `
-        select concat(u.nome, " ", u.cognome) as nome_cognome, s.luogo, s.\`data\`, s.importo , s.tipo_pagamento, s.descrizione, c.nome as categoria, s.documento
+        select concat(u.nome, " ", u.cognome) as nome_cognome, s.luogo, s.\`data\`, s.importo , IF(s.tipo_pagamento=1, "Bancomat", "Contante") as tipo_pagamento, s.descrizione, c.nome as categoria, s.documento
         from spesa s 
         inner join utente u on u.id = s.id_utente 
         inner join categoria c on c.id = s.id_categoria 
@@ -52,7 +52,7 @@ const Expense = {
     },
     selectAllExpense: async ({ idu, flagGenitore }) => {
         const mysql = `
-        select s.id, concat(u.nome, " ", u.cognome) as nome_cognome, s.luogo, s.\`data\`, s.importo , s.tipo_pagamento, s.descrizione, c.nome as categoria, s.documento, c.id as id_categoria
+        select s.id, concat(u.nome, " ", u.cognome) as nome_cognome, s.luogo, s.\`data\`, s.importo , IF(s.tipo_pagamento=1, "Bancomat", "Contante") as tipo_pagamento, s.descrizione, c.nome as categoria, s.documento, c.id as id_categoria
         from spesa s 
         inner join utente u on u.id = s.id_utente 
         inner join categoria c on c.id = s.id_categoria 
