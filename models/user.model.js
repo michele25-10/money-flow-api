@@ -37,6 +37,15 @@ const User = {
         const mysql = "select id, nome, cognome, telefono, email, img, if(flag_genitore=1, TRUE, FALSE) as flag_genitore from utente where id_famiglia=@idFamiglia";
         const result = await connFunction.query(mysql, { idFamiglia });
         return result;
+    },
+    insertUser: async ({ nome, cognome, email, telefono, flag_genitore, id_famiglia, password }) => {
+        const result = await connFunction.insert("utente", { nome, cognome, email, telefono, flag_genitore, id_famiglia, password });
+        return result;
+    },
+    selectIdUserByEmail: async ({ email }) => {
+        const mysql = 'select id from utente where email LIKE @email';
+        const result = await connFunction.query(mysql, { email });
+        return result;
     }
 }
 

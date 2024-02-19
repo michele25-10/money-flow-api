@@ -14,6 +14,12 @@ const Authorization = {
     updateAuthorizationUser: async ({ idu, idAuthorization, valore }) => {
         const result = await connFunction.update("autorizzazione_utente", { valore }, "id_utente=@idu and id_autorizzazione=@idAuthorization", { idu, idAuthorization },);
         return result;
+    },
+    insertAuthorizationUser: async ({ id_utente, id_autorizzazione, valore }) => {
+        const result = await connFunction.insert("autorizzazione_utente", {
+            valore, id_utente, id_autorizzazione
+        });
+        return result;
     }
 }
 

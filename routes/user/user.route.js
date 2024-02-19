@@ -7,6 +7,7 @@ const validate = require('../../middleware/JoiValidation');
 const validateToken = require('../../middleware/validateToken');
 
 router.all('*', validateToken);
+router.post("/", validate(userValidation.postUser), userController.postUser);
 router.get("/family/", userController.getAllUserFamily);
 
 
