@@ -8,7 +8,7 @@ const postExpense = {
         descrizione: Joi.string().allow("", null).max(100),
         tipoPagamento: Joi.string().valid("0", "1").required(),
         categoria: Joi.number().integer().required(),
-        documento: Joi.string().allow(null, ""),
+        documento: Joi.object().allow(null, ""),
     })
 };
 
@@ -23,7 +23,7 @@ const putExpense = {
         descrizione: Joi.string().allow("", null).max(100),
         tipoPagamento: Joi.string().valid("0", "1").required(),
         categoria: Joi.number().integer().required(),
-        documento: Joi.string().allow(null, ""),
+        documento: Joi.object().allow(null, ""),
     })
 };
 
