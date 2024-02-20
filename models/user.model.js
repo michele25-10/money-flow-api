@@ -55,6 +55,13 @@ const User = {
             { id }
         );
         return result;
+    },
+    selectUserInfo: async ({ id }) => {
+        const mysql = "select id, nome, cognome, telefono, email, img from utente where id=@id";
+        const result = await connFunction.query(mysql, {
+            id
+        });
+        return result;
     }
 };
 module.exports = User;

@@ -6,7 +6,7 @@ const { setLogOperazione } = require('../../utils/setLog');
 
 //@desc inserimento nuova famiglia
 //@route POST /api/user/
-//@access private
+//@access super private
 const postFamily = asyncHandler(async (req, res) => {
     if (req.user.dev) {
         const result = await Family.insertFamily({

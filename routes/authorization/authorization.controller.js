@@ -11,7 +11,7 @@ const getAllAuthorization = asyncHandler(async (req, res) => {
     res.status(200).send(result);
 });
 
-//@desc get di tutte le autorizzazioni di un utente
+//@desc get di tutte le autorizzazioni dell'utente che richiede
 //@route GET /api/authorization/
 //@access private
 const getAllAuthorizationUser = asyncHandler(async (req, res) => {

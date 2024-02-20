@@ -3,6 +3,7 @@ const User = require('../../models/user.model');
 const Authorization = require('../../models/authorization.model');
 const { hash } = require('../../utils/crypto');
 const { setLogOperazione } = require('../../utils/setLog');
+const { tipoOperazioni } = require('../../enums/tipo_operazioni');
 
 //@desc get di tutti gli utenti di una famiglia
 //@route GET /api/user/
@@ -29,6 +30,11 @@ const postUser = asyncHandler(async (req, res) => {
             id_famiglia: req.body.idFamiglia,
         });
 
+        if (result.affectedRows != 1) {
+            res.status(500);
+            throw new Error();
+        }
+
         const autorizzazioni = await Authorization.selectAllAuthorization();
 
         const user = await User.selectIdUserByEmail({ email: req.body.email });
@@ -39,11 +45,26 @@ const postUser = asyncHandler(async (req, res) => {
 
 
         for (const auth of autorizzazioni) {
-            console.log(auth);
+            let valore = 1;
+
+            if (req.body.flagGenitore) {
+                if (auth.id === 6) {
+                    valore = 0;
+                }
+            } else {
+                if (auth.id === 1 || auth.id === 4 || auth.id === 8) {
+                    valore = 0;
+                }
+            }
+
+            if (auth.id === 9) {
+                valore = 0;
+            }
+
             const insertAuthUser = await Authorization.insertAuthorizationUser({
                 id_autorizzazione: auth.id,
                 id_utente: user[0].id,
-                valore: 1,
+                valore
             });
             if (insertAuthUser.affectedRows != 1) {
                 res.status(500);
@@ -58,11 +79,11 @@ const postUser = asyncHandler(async (req, res) => {
     }
 });
 
-//@desc post di un utente
-//@route POST /api/user/
+//@desc modifica del mio utente
+//@route PUT /api/user/
 //@access private
 const putUser = asyncHandler(async (req, res) => {
-    const result = User.updateUser({
+    const result = await User.updateUser({
         nome: req.body.nome,
         cognome: req.body.cognome,
         email: req.body.email,
@@ -96,4 +117,17 @@ const putUser = asyncHandler(async (req, res) => {
     res.status(200).send({ message: "Modificato profilo con successo" });
 
 });
-module.exports = { getAllUserFamily, postUser, putUser, }
+
+const userInfo = asyncHandler(async (req, res) => {
+    const result = await User.selectUserInfo({ id: req.user.idu });
+
+    if (result.length != 1) {
+        res.status(500);
+        throw new Error();
+    }
+
+    res.status(200).send(result[0]);
+});
+
+
+module.exports = { getAllUserFamily, postUser, putUser, userInfo }
