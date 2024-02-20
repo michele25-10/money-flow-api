@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../../models/user.model');
+const Authorization = require('../../models/authorization.model');
 const { constants } = require('../../enums/constants');
 const { hash, encrypt } = require('../../utils/crypto');
 const { setLogOperazione } = require('../../utils/setLog');
@@ -39,18 +40,22 @@ const loginUser = asyncHandler(async (req, res) => {
                 messaggioErrore: null
             });
 
+            const authUser = await Authorization.selectAllAuthorizationUser({ idu: objUser.id });
+
             if (req.body.ricordami) {
                 const credentialsString = JSON.stringify({ famiglia, email, password });
                 const hashCredentials = encrypt(credentialsString, process.env.SECRET_KEY);
                 //gli ultimi 32 caratteri corrisponderanno all'iv
                 res.status(200).send({
                     accessToken: accessToken,
-                    ricordami: hashCredentials.encryptedText + hashCredentials.iv
+                    ricordami: hashCredentials.encryptedText + hashCredentials.iv,
+                    auth: authUser,
                 })
             }
 
             res.status(200).send({
-                accessToken: accessToken
+                accessToken: accessToken,
+                auth: authUser,
             });
         } else {
             res.status(constants.UNAUTHORIZED);
