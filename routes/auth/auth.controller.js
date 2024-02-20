@@ -24,6 +24,7 @@ const loginUser = asyncHandler(async (req, res) => {
                     idu: objUser.id,
                     genitore: objUser.flag_genitore ? true : false,
                     idf: objUser.id_famiglia,
+                    dev: objUser.dev,
                     nome_famiglia: famiglia,
                     nome: objUser.nome,
                     cognome: objUser.cognome,

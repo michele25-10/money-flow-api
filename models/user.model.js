@@ -2,7 +2,7 @@ const connFunction = require('../utils/executeMySql');
 
 const User = {
     login: async (email, famiglia) => {
-        const mysql = `select u.id, u.nome, u.cognome, u.password, u.flag_genitore, f.id as id_famiglia 
+        const mysql = `select u.id, u.nome, u.cognome, u.password, if(u.flag_genitore=1, TRUE, FALSE) as flag_genitore, f.id as id_famiglia, if(u.dev=1, TRUE, FALSE) as dev 
         from utente u
         inner join famiglia f on f.nome LIKE @famiglia and f.id = u.id_famiglia 
         where u.email = @email;`;

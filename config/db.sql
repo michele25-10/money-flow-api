@@ -27,6 +27,7 @@ create table utente (
 	telefono varchar(10) not null, 
 	img BLOB null,
 	flag_genitore bit default 0 not null,
+	dev bit default 0 not null,
 	id_famiglia int unsigned not null,
 	FOREIGN KEY (id_famiglia)
     	REFERENCES famiglia(id)
