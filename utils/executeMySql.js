@@ -15,7 +15,7 @@ const executeQuery = async (mysql) => {
         sqlResult = value;
     }).catch((err) => {
         console.error(err);
-        throw new Error(err);
+        throw new Error(err, { status: 500 });
     });
 
     return sqlResult;

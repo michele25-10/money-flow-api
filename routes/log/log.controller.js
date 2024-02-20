@@ -7,9 +7,6 @@ const Log = require('../../models/log.model');
 const getAllLog = asyncHandler(async (req, res) => {
     if (req.user.dev) {
         const result = await Log.selectAllLog();
-
-        console.log(req.user.flagGenitore);
-
         res.status(200).send(result);
     } else {
         res.status(401);
