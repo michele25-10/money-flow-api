@@ -46,7 +46,15 @@ const User = {
         const mysql = 'select id from utente where email LIKE @email';
         const result = await connFunction.query(mysql, { email });
         return result;
+    },
+    updateUser: async ({ nome, cognome, email, telefono, img }, { id }) => {
+        const result = await connFunction.update(
+            "utente",
+            { nome, cognome, email, telefono, img },
+            "id=@id",
+            { id }
+        );
+        return result;
     }
-}
-
+};
 module.exports = User;

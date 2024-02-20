@@ -27,6 +27,7 @@ const postFamily = asyncHandler(async (req, res) => {
                 tabella: "famiglia",
                 messaggioErrore: "Inserimento famiglia fallito",
             });
+            res.status(500);
             throw new Error();
         }
 

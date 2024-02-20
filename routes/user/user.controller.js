@@ -58,4 +58,42 @@ const postUser = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { getAllUserFamily, postUser }
+//@desc post di un utente
+//@route POST /api/user/
+//@access private
+const putUser = asyncHandler(async (req, res) => {
+    const result = User.updateUser({
+        nome: req.body.nome,
+        cognome: req.body.cognome,
+        email: req.body.email,
+        telefono: req.body.telefono,
+        img: req.body.img ? req.body.img : null,
+    }, { id: req.user.idu })
+
+    if (result.affectedRows != 1) {
+        setLogOperazione({
+            idu: req.user.idu,
+            tipoOperazione: tipoOperazioni.inserimento,
+            ipAddress: req.ip,
+            token: req.headers.Authorization || req.headers.authorization,
+            body: req.body,
+            tabella: "utente",
+            messaggioErrore: "Inserimento famiglia fallito",
+        });
+        res.status(500);
+        throw new Error();
+    }
+
+    setLogOperazione({
+        idu: req.user.idu,
+        tipoOperazione: tipoOperazioni.inserimento,
+        ipAddress: req.ip,
+        token: req.headers.Authorization || req.headers.authorization,
+        body: req.body,
+        tabella: "utente",
+    });
+
+    res.status(200).send({ message: "Modificato profilo con successo" });
+
+});
+module.exports = { getAllUserFamily, postUser, putUser, }
