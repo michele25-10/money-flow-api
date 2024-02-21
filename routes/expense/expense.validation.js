@@ -39,5 +39,10 @@ const getExpenseById = {
     })
 };
 
+const getAllExpense = {
+    query: Joi.object().keys({
+        limit: Joi.number().integer()
+    })
+};
 
-module.exports = { postExpense, putExpense, deleteExpense, getExpenseById };
+module.exports = { postExpense, putExpense, deleteExpense, getExpenseById, getAllExpense };

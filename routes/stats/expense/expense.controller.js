@@ -119,7 +119,6 @@ const getTotalExpense = asyncHandler(async (req, res) => {
         response.totale = convertMonthSql(response.totale);
     }
 
-
     res.status(200).send(response);
 });
 

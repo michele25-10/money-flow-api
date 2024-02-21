@@ -50,16 +50,20 @@ const Expense = {
         })
         return result;
     },
-    selectAllExpense: async ({ idu, flagGenitore }) => {
+    selectAllExpense: async ({ idu, idf, flagGenitore, limit }) => {
         const mysql = `
         select s.id, concat(u.nome, " ", u.cognome) as nome_cognome, s.luogo, s.\`data\`, s.importo , IF(s.tipo_pagamento=1, "Bancomat", "Contante") as tipo_pagamento, s.descrizione, c.nome as categoria, s.documento, c.id as id_categoria
         from spesa s 
         inner join utente u on u.id = s.id_utente 
         inner join categoria c on c.id = s.id_categoria 
-        where s.\`data\`>= date_sub(now(), interval 365 day) ${flagGenitore ? '' : ' AND s.id_utente = @idu'}`;
+        where s.\`data\`>= date_sub(now(), interval 365 day) ${flagGenitore ? ' AND u.id_famiglia=@idf' : ' AND s.id_utente = @idu'}
+        ${limit ? " limit @limit " : ""}`;
         const result = await connFunction.query(mysql, {
-            idu
+            idu,
+            idf,
+            limit
         })
+
         return result;
     },
     selectTotalExpenseOfPeriod: async ({ idu, idf, typeWeek, typeYear, year }) => {
