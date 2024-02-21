@@ -8,4 +8,10 @@ const getTotalExpense = {
     }),
 };
 
-module.exports = { getTotalExpense };
+const getTotalExpenseFamilyYear = {
+    query: Joi.object().keys({
+        year: Joi.number().integer(),
+    }),
+};
+
+module.exports = { getTotalExpense, getTotalExpenseFamilyYear };

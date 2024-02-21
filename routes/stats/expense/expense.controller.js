@@ -122,4 +122,25 @@ const getTotalExpense = asyncHandler(async (req, res) => {
     res.status(200).send(response);
 });
 
-module.exports = { getTotalExpense }
+const getTotalExpenseFamilyYear = asyncHandler(async (req, res) => {
+    const year = req.query.year ? req.query.year : new Date().getFullYear();
+    const response = {};
+    const checkPermission = await isAuthorised({ idAuth: authList.dashboard, req });
+    if (!checkPermission) {
+        res.status(403);
+        throw new Error();
+    }
+
+    response.family = await Expense.selectAllExpenseFamilyYear({ idf: req.user.idf, year })
+
+    let i = 0;
+    for (const row of response.family) {
+
+        row.color = chartColors[i];
+        i++;
+    }
+
+    res.status(200).send(response);
+})
+
+module.exports = { getTotalExpense, getTotalExpenseFamilyYear }

@@ -8,5 +8,6 @@ const validateToken = require('../../../middleware/validateToken');
 
 router.all('*', validateToken);
 router.get("/", validate(expenseValidation.getTotalExpense), expenseController.getTotalExpense);
+router.get("/family", validate(expenseValidation.getTotalExpenseFamilyYear), expenseController.getTotalExpenseFamilyYear);
 
 module.exports = router;

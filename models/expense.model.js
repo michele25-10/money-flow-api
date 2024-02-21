@@ -88,6 +88,16 @@ const Expense = {
 
         const result = await connFunction.query(mysql, { idu, idf, year });
         return result;
+    },
+    selectAllExpenseFamilyYear: async ({ idf, year }) => {
+        let mysql = `
+        select u.id, concat(u.nome, " ", u.cognome) as nome, sum(s.importo) as tot
+        from spesa s 
+        inner join utente u on u.id = s.id_utente 
+        where year(s.\`data\`)=@year and u.id_famiglia=@idf
+        group by u.id;`;
+        const result = await connFunction.query(mysql, { idf, year });
+        return result;
     }
 }
 
