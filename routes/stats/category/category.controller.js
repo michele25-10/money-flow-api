@@ -12,7 +12,8 @@ const getExpenseCategory = asyncHandler(async (req, res) => {
     const year = req.query.year ? req.query.year : new Date().getFullYear();
 
     if (req.query.dashboard) {
-        if (!isAuthorised(authList.dashboard, req)) {
+        const checkPermission = await isAuthorised({ idAuth: authList.dashboard, req });
+        if (!checkPermission) {
             res.status(403);
             throw new Error();
         }
@@ -24,6 +25,7 @@ const getExpenseCategory = asyncHandler(async (req, res) => {
 
         let i = 0;
         for (const row of response.pieChart) {
+
             row.color = chartColors[i];
             i++;
         }

@@ -1,11 +1,11 @@
-const { checkAuthorization } = require("../models/authorization.model");
+const Authorization = require("../models/authorization.model");
 const asyncHandler = require('express-async-handler');
 
 const isAuthorised = asyncHandler(async ({ idAuth, req }) => {
     if (req.user.dev) {
         return true;
     }
-
+    let isNumber = false;
     let stringId = "";
     if (typeof idAuth === 'array') {
         for (const auth of idAuth) {
@@ -14,18 +14,14 @@ const isAuthorised = asyncHandler(async ({ idAuth, req }) => {
         stringaID = stringId.substring(0, stringId.length - 1);
     } else if (typeof idAuth === 'number') {
         stringId = idAuth;
+        isNumber = true;
     }
 
-    const mysql = `
-        SELECT au.id_autorizzazione, au.valore 
-        FROM autorizzazione_utente au 
-        WHERE au.id_autorizzazione IN (@id_auth) AND au.id_utente=@idu AND au.valore='1'`;
-
-    const result = await checkAuthorization({ id_auth: stringId, idu: req.user.idu });
-    if (result.length != idAuth.length) {
-        return false
+    const result = await Authorization.checkAuthorization({ id_auth: stringId, idu: req.user.idu });
+    if (isNumber) {
+        return result.length != 1 ? false : true;
     } else {
-        return true;
+        return result.length != idAuth.length ? false : true;
     }
 });
 

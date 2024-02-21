@@ -61,6 +61,29 @@ const Expense = {
             idu
         })
         return result;
+    },
+    selectTotalExpenseOfPeriod: async ({ idu, idf, typeWeek, typeYear, year }) => {
+        let mysql = "";
+        if (typeWeek) {
+            mysql = `
+            SELECT DAYOFWEEK(s.data) as giorno_settimana, sum(s.importo) AS tot
+            FROM spesa s 
+            inner join utente u on u.id = ${idu ? " @idu " : " s.id_utente "} 
+            WHERE YEARWEEK(s.data) = YEARWEEK(NOW()) ${idf ? " AND u.id_famiglia=@idf " : ""}
+            GROUP BY DAYOFWEEK(s.data)
+            ORDER BY giorno_settimana`;
+        } else if (typeYear) {
+            mysql = `
+            SELECT MONTH(data) AS mese,sum(s.importo) AS tot
+            FROM spesa s 
+            inner join utente u on u.id = ${idu ? " @idu " : " s.id_utente "} 
+            WHERE YEAR(s.data) = @year ${idf ? " AND u.id_famiglia=@idf " : ""}
+            GROUP BY MONTH(s.data)
+            ORDER BY mese;`;
+        }
+
+        const result = await connFunction.query(mysql, { idu, idf, year });
+        return result;
     }
 }
 
