@@ -20,6 +20,15 @@ const Authorization = {
             valore, id_utente, id_autorizzazione
         });
         return result;
+    },
+    checkAuthorization: async ({ id_auth, idu }) => {
+        const mysql = `
+        SELECT au.id_autorizzazione, au.valore 
+        FROM autorizzazione_utente au 
+        WHERE au.id_autorizzazione IN (@id_auth) AND au.id_utente=@idu AND au.valore='1'`;
+
+        const result = await connFunction.query(mysql, { id_auth, idu });
+        return result;
     }
 }
 
