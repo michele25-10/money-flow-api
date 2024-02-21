@@ -8,5 +8,6 @@ router.use("/authorization", require("./authorization/authorization.route"));
 router.use("/user", require("./user/user.route"));
 router.use("/family", require("./family/family.route"));
 router.use("/log", require("./log/log.route"));
+router.use("/stats", require("./stats/stats.route"));
 
 module.exports = router;

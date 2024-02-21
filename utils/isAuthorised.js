@@ -1,4 +1,5 @@
 const { checkAuthorization } = require("../models/authorization.model");
+const asyncHandler = require('express-async-handler');
 
 const isAuthorised = asyncHandler(async ({ idAuth, req }) => {
     if (req.user.dev) {
