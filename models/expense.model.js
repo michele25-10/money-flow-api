@@ -57,6 +57,7 @@ const Expense = {
         inner join utente u on u.id = s.id_utente 
         inner join categoria c on c.id = s.id_categoria 
         where s.\`data\`>= date_sub(now(), interval 365 day) ${flagGenitore ? ' AND u.id_famiglia=@idf' : ' AND s.id_utente = @idu'}
+        order by s.\`data\` desc
         ${limit ? " limit @limit " : ""}`;
         const result = await connFunction.query(mysql, {
             idu,
@@ -72,16 +73,16 @@ const Expense = {
             mysql = `
             SELECT DAYOFWEEK(s.data) as giorno_settimana, sum(s.importo) AS tot
             FROM spesa s 
-            inner join utente u on u.id = ${idu ? " @idu " : " s.id_utente "} 
-            WHERE YEARWEEK(s.data) = YEARWEEK(NOW()) ${idf ? " AND u.id_famiglia=@idf " : ""}
+            inner join utente u on s.id_utente=u.id 
+            WHERE YEARWEEK(s.data) = YEARWEEK(NOW()) ${idf ? " AND u.id_famiglia=@idf " : ""} ${idu ? " AND s.id_utente=@idu " : ""}
             GROUP BY DAYOFWEEK(s.data)
             ORDER BY giorno_settimana`;
         } else if (typeYear) {
             mysql = `
             SELECT MONTH(data) AS mese,sum(s.importo) AS tot
             FROM spesa s 
-            inner join utente u on u.id = ${idu ? " @idu " : " s.id_utente "} 
-            WHERE YEAR(s.data) = @year ${idf ? " AND u.id_famiglia=@idf " : ""}
+            inner join utente u on s.id_utente=u.id 
+            WHERE YEAR(s.data) = @year ${idf ? " AND u.id_famiglia=@idf " : ""} ${idu ? " AND s.id_utente=@idu " : ""}
             GROUP BY MONTH(s.data)
             ORDER BY mese;`;
         }

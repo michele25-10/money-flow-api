@@ -14,4 +14,11 @@ const getTotalExpenseFamilyYear = {
     }),
 };
 
-module.exports = { getTotalExpense, getTotalExpenseFamilyYear };
+const AnalyseTotalExpenseFamily = {
+    query: Joi.object().keys({
+        year: Joi.number().integer(),
+    }),
+};
+
+
+module.exports = { getTotalExpense, getTotalExpenseFamilyYear, AnalyseTotalExpenseFamily };

@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Expense = require('../../../models/expense.model');
+const User = require('../../../models/user.model');
 const isAuthorised = require("../../../utils/isAuthorised");
 const { authList } = require('../../../enums/authorization');
 const { chartColors } = require("../../../enums/chartColors");
@@ -143,4 +144,49 @@ const getTotalExpenseFamilyYear = asyncHandler(async (req, res) => {
     res.status(200).send(response);
 })
 
-module.exports = { getTotalExpense, getTotalExpenseFamilyYear }
+const AnalyseTotalExpenseFamily = asyncHandler(async (req, res) => {
+    const year = req.query.year ? req.query.year : new Date().getFullYear();
+    let response = {};
+    response.chartData = [
+        { mese: "Gen" },
+        { mese: "Feb" },
+        { mese: "Mar" },
+        { mese: "Apr" },
+        { mese: "Mag" },
+        { mese: "Giu" },
+        { mese: "Lug" },
+        { mese: "Ago" },
+        { mese: "Set" },
+        { mese: "Ott" },
+        { mese: "Nov" },
+        { mese: "Dic" },
+    ];
+
+    const checkPermission = await isAuthorised({ idAuth: authList.dashboard, req });
+    if (!checkPermission) {
+        res.status(403);
+        throw new Error();
+    }
+
+    const userFamily = await User.selectAllUserFamily({ idFamiglia: req.user.idf });
+    response.color = [];
+    let i = 0;
+    for (const row of userFamily) {
+        let dataUserExpense = await Expense.selectTotalExpenseOfPeriod({ idu: row.id, typeYear: true, year });
+        dataUserExpense = convertMonthSql(dataUserExpense);
+        const nomeCognome = row.nome + " " + row.cognome;
+        for (const i in dataUserExpense) {
+            response.chartData[i][nomeCognome] = dataUserExpense[i].tot;
+        }
+
+        const objColor = {
+            nome: nomeCognome,
+            color: chartColors[i]
+        }
+        response.color.push(objColor);
+        i++
+    }
+    res.status(200).send(response);
+})
+
+module.exports = { getTotalExpense, getTotalExpenseFamilyYear, AnalyseTotalExpenseFamily }
