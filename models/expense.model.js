@@ -92,7 +92,7 @@ const Expense = {
     },
     selectAllExpenseFamilyYear: async ({ idf, year }) => {
         let mysql = `
-        select u.id, concat(u.nome, " ", u.cognome) as nome, sum(s.importo) as tot
+        select u.id, concat(u.nome, " ", u.cognome) as name, sum(s.importo) as value
         from spesa s 
         inner join utente u on u.id = s.id_utente 
         where year(s.\`data\`)=@year and u.id_famiglia=@idf

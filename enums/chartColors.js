@@ -1,9 +1,9 @@
 exports.chartColors = [
-    "#0088fe",
-    "#00c49f",
-    "#ffbb28",
-    "#ff8042",
     "#8884d8",
+    "#ff8042",
+    "#ffbb28",
+    "#00c49f",
+    "#0088fe",
     "#FF0000", // Rosso Vivace
     "#FFA500", // Arancione Brillante
     "#FFFF00", // Giallo Limone

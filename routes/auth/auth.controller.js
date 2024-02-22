@@ -47,6 +47,8 @@ const loginUser = asyncHandler(async (req, res) => {
             });
             response.accessToken = accessToken;
 
+            response.name = objUser.nome + " " + objUser.cognome;
+
             const authUser = await Authorization.selectAllAuthorizationUser({ idu: objUser.id });
             response.auth = authUser;
 

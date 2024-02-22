@@ -128,17 +128,17 @@ const getTotalExpense = asyncHandler(async (req, res) => {
 //@access private
 const getTotalExpenseFamilyYear = asyncHandler(async (req, res) => {
     const year = req.query.year ? req.query.year : new Date().getFullYear();
-    const response = {};
+
     const checkPermission = await isAuthorised({ idAuth: authList.dashboard, req });
     if (!checkPermission) {
         res.status(403);
         throw new Error();
     }
 
-    response.family = await Expense.selectAllExpenseFamilyYear({ idf: req.user.idf, year })
+    const response = await Expense.selectAllExpenseFamilyYear({ idf: req.user.idf, year })
 
     let i = 0;
-    for (const row of response.family) {
+    for (const row of response) {
 
         row.color = chartColors[i];
         i++;
@@ -154,18 +154,18 @@ const AnalyseTotalExpenseFamily = asyncHandler(async (req, res) => {
     const year = req.query.year ? req.query.year : new Date().getFullYear();
     let response = {};
     response.chartData = [
-        { mese: "Gen" },
-        { mese: "Feb" },
-        { mese: "Mar" },
-        { mese: "Apr" },
-        { mese: "Mag" },
-        { mese: "Giu" },
-        { mese: "Lug" },
-        { mese: "Ago" },
-        { mese: "Set" },
-        { mese: "Ott" },
-        { mese: "Nov" },
-        { mese: "Dic" },
+        { name: "Gen" },
+        { name: "Feb" },
+        { name: "Mar" },
+        { name: "Apr" },
+        { name: "Mag" },
+        { name: "Giu" },
+        { name: "Lug" },
+        { name: "Ago" },
+        { name: "Set" },
+        { name: "Ott" },
+        { name: "Nov" },
+        { name: "Dic" },
     ];
 
     const checkPermission = await isAuthorised({ idAuth: authList.dashboard, req });
@@ -175,7 +175,7 @@ const AnalyseTotalExpenseFamily = asyncHandler(async (req, res) => {
     }
 
     const userFamily = await User.selectAllUserFamily({ idFamiglia: req.user.idf });
-    response.color = [];
+    response.dataKey = [];
     let i = 0;
     for (const row of userFamily) {
         let dataUserExpense = await Expense.selectTotalExpenseOfPeriod({ idu: row.id, typeYear: true, year });
@@ -186,10 +186,11 @@ const AnalyseTotalExpenseFamily = asyncHandler(async (req, res) => {
         }
 
         const objColor = {
-            nome: nomeCognome,
-            color: chartColors[i]
+            name: nomeCognome,
+            color: chartColors[i],
+            id: i
         }
-        response.color.push(objColor);
+        response.dataKey.push(objColor);
         i++
     }
     res.status(200).send(response);

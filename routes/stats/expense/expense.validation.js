@@ -23,7 +23,7 @@ const AnalyseTotalExpenseFamily = {
 const AverageExpense = {
     query: Joi.object().keys({
         year: Joi.number().integer(),
-        dashboard: Joi.number().integer(),
+        dashboard: Joi.boolean(),
     }),
 };
 
