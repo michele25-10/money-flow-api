@@ -88,7 +88,7 @@ const convertMonthSql = (data) => {
 }
 
 //@desc get del totale delle spese per categoria
-//@route GET /api/stats/category
+//@route GET /api/stats/
 //@access private
 const getTotalExpense = asyncHandler(async (req, res) => {
     let response = {};
@@ -123,6 +123,9 @@ const getTotalExpense = asyncHandler(async (req, res) => {
     res.status(200).send(response);
 });
 
+//@desc get del totale delle spese per utente in un anno
+//@route GET /api/stats/family
+//@access private
 const getTotalExpenseFamilyYear = asyncHandler(async (req, res) => {
     const year = req.query.year ? req.query.year : new Date().getFullYear();
     const response = {};
@@ -144,6 +147,9 @@ const getTotalExpenseFamilyYear = asyncHandler(async (req, res) => {
     res.status(200).send(response);
 })
 
+//@desc get del totale delle spese per ogni utente in un anno
+//@route GET /api/stats/analyse
+//@access private
 const AnalyseTotalExpenseFamily = asyncHandler(async (req, res) => {
     const year = req.query.year ? req.query.year : new Date().getFullYear();
     let response = {};
@@ -193,6 +199,9 @@ const calculatePercentuage = (lastAverage, currentAverage) => {
     return parseInt(((currentAverage / lastAverage) * 100) - 100);
 }
 
+//@desc spesa media famiglia o utente del mese o annoa + dati per grafico
+//@route GET /api/stats/average
+//@access private
 const AverageExpense = asyncHandler(async (req, res) => {
     let response = {};
     const year = req.query.year ? req.query.year : new Date().getFullYear();

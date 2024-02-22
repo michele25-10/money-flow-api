@@ -19,6 +19,21 @@ const Category = {
         ${limit ? " limit @limit " : ""}`;
         const result = await connFunction.query(mysql, { idu, idf, year, limit });
         return result;
+    },
+    selectMaxCategoryExpenseForUser: async ({ idf, year }) => {
+        const mysql = `
+        select j.id, j.nome_cognome, max(j.tot) as tot, j.nome, j.flag_genitore
+        from (
+	        select u.id, concat(u.nome, " ", u.cognome) as nome_cognome, sum(s.importo) as tot, c.nome, if(u.flag_genitore=1, TRUE, FALSE) as flag_genitore  
+	        from categoria c 
+	        inner join spesa s on s.id_categoria = c.id 
+	        inner join utente u on u.id = s.id_utente 
+	        where u.id_famiglia = @idf and YEAR(s.\`data\`) = @year and c.spesa_fissa=0
+	        group by c.id, u.id
+        ) j
+        group by j.id; `;
+        const result = await connFunction.query(mysql, { idf, year });
+        return result;
     }
 }
 
