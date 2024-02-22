@@ -15,7 +15,8 @@ const getAllAuthorization = asyncHandler(async (req, res) => {
 //@route GET /api/authorization/
 //@access private
 const getAllAuthorizationUser = asyncHandler(async (req, res) => {
-    const result = await Authorization.selectAllAuthorizationUser({ idu: req.user.idu });
+    const result = await Authorization.selectAllAuthorizationUser({ idu: req.query.idUser });
+
     res.status(200).send(result);
 });
 

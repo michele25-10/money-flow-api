@@ -10,4 +10,10 @@ const putAuthorizationUser = {
     })
 };
 
-module.exports = { putAuthorizationUser };
+const getAllAuthorizationUser = {
+    query: Joi.object().keys({
+        idUser: Joi.string().required(),
+    }),
+};
+
+module.exports = { putAuthorizationUser, getAllAuthorizationUser };
