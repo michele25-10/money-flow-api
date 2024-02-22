@@ -53,4 +53,32 @@ const getFixedExpenseDataOfYear = asyncHandler(async (req, res) => {
     res.status(200).send(response);
 });
 
-module.exports = { getFixedExpenseDataOfYear }
+//@desc get del totale delle spese per categoria
+//@route GET /api/stats/category
+//@access private
+const getTotalFixedExpenseOfYear = asyncHandler(async (req, res) => {
+    const response = {};
+    const checkPermission = await isAuthorised({ idAuth: authList.speseFisse, req });
+    if (!checkPermission) {
+        res.status(403);
+        throw new Error();
+    }
+
+    const totAnno = await Category.selectTotalFixedExpenseOfYear({ idf: req.user.idf, year: req.query.year });
+
+    const objTot = {};
+
+    for (const row of totAnno) {
+        objTot[row.anno] = row.totale;
+    }
+
+    response.data = objTot;
+
+    console.log(response);
+
+
+    res.status(200).send(response);
+});
+
+
+module.exports = { getFixedExpenseDataOfYear, getTotalFixedExpenseOfYear }

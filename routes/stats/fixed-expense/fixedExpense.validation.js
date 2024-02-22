@@ -6,4 +6,11 @@ const getFixedExpenseDataOfYear = {
     }),
 };
 
-module.exports = { getFixedExpenseDataOfYear };
+const getTotalFixedExpenseOfYear = {
+    query: Joi.object().keys({
+        year: Joi.number().integer().required(),
+    }),
+};
+
+
+module.exports = { getFixedExpenseDataOfYear, getTotalFixedExpenseOfYear };
