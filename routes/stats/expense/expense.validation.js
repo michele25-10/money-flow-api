@@ -20,5 +20,11 @@ const AnalyseTotalExpenseFamily = {
     }),
 };
 
+const AverageExpense = {
+    query: Joi.object().keys({
+        year: Joi.number().integer(),
+        dashboard: Joi.number().integer(),
+    }),
+};
 
-module.exports = { getTotalExpense, getTotalExpenseFamilyYear, AnalyseTotalExpenseFamily };
+module.exports = { getTotalExpense, getTotalExpenseFamilyYear, AnalyseTotalExpenseFamily, AverageExpense };

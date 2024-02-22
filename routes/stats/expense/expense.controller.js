@@ -174,7 +174,7 @@ const AnalyseTotalExpenseFamily = asyncHandler(async (req, res) => {
     for (const row of userFamily) {
         let dataUserExpense = await Expense.selectTotalExpenseOfPeriod({ idu: row.id, typeYear: true, year });
         dataUserExpense = convertMonthSql(dataUserExpense);
-        const nomeCognome = row.nome + " " + row.cognome;
+        const nomeCognome = row.nome + "_" + row.cognome;
         for (const i in dataUserExpense) {
             response.chartData[i][nomeCognome] = dataUserExpense[i].tot;
         }
@@ -187,6 +187,77 @@ const AnalyseTotalExpenseFamily = asyncHandler(async (req, res) => {
         i++
     }
     res.status(200).send(response);
-})
+});
 
-module.exports = { getTotalExpense, getTotalExpenseFamilyYear, AnalyseTotalExpenseFamily }
+const calculatePercentuage = (lastAverage, currentAverage) => {
+    return parseInt(((currentAverage / lastAverage) * 100) - 100);
+}
+
+const AverageExpense = asyncHandler(async (req, res) => {
+    let response = {};
+    const year = req.query.year ? req.query.year : new Date().getFullYear();
+
+    if (req.query.dashboard) {
+        const checkPermission = await isAuthorised({ idAuth: authList.dashboard, req });
+        if (!checkPermission) {
+            res.status(403);
+            throw new Error();
+        }
+
+        const averageMonth = await Expense.selectAverageExpenseOfPeriod({ idf: req.user.idf, typeMonth: true });
+        const percentuageMonth = calculatePercentuage(averageMonth[0].last_average, averageMonth[0].current_average);
+        const dataMonth = await Expense.selectAllExpenseOfPeriod({ idf: req.user.idf, typeMonth: true });
+        response.month = {
+            percentuage: percentuageMonth,
+            total: averageMonth[0].total,
+            data: dataMonth,
+            nome: "Famiglia",
+            cognome: "",
+            quando: "Questo mese",
+            color: "yellow",
+        }
+
+        const averageYear = await Expense.selectAverageExpenseOfPeriod({ idf: req.user.idf, typeYear: true });
+        const percentuageYear = calculatePercentuage(averageYear[0].last_average, averageYear[0].current_average);
+        const dataYear = await Expense.selectAllExpenseOfPeriod({ idf: req.user.idf, typeYear: true });
+        response.year = {
+            percentuage: percentuageYear,
+            total: averageYear[0].total,
+            data: dataYear,
+            nome: "Famiglia",
+            cognome: "",
+            quando: "Quest'anno",
+            color: "orange"
+        }
+    } else {
+        const averageMonth = await Expense.selectAverageExpenseOfPeriod({ idu: req.user.idu, typeMonth: true });
+        const percentuageMonth = calculatePercentuage(averageMonth[0].last_average, averageMonth[0].current_average);
+        const dataMonth = await Expense.selectAllExpenseOfPeriod({ idu: req.user.idu, typeMonth: true });
+        response.month = {
+            percentuage: percentuageMonth,
+            total: averageMonth[0].total,
+            data: dataMonth,
+            nome: req.user.nome,
+            cognome: req.user.cognome,
+            quando: "Questo mese",
+            color: "yellow"
+        }
+
+        const averageYear = await Expense.selectAverageExpenseOfPeriod({ idu: req.user.idu, typeYear: true });
+        const percentuageYear = calculatePercentuage(averageYear[0].last_average, averageYear[0].current_average);
+        const dataYear = await Expense.selectAllExpenseOfPeriod({ idu: req.user.idu, typeYear: true });
+        response.year = {
+            percentuage: percentuageYear,
+            total: averageYear[0].total,
+            data: dataYear,
+            nome: req.user.nome,
+            cognome: req.user.cognome,
+            quando: "Quest'anno",
+            color: "orange"
+        }
+    }
+
+    res.status(200).send(response);
+});
+
+module.exports = { getTotalExpense, getTotalExpenseFamilyYear, AnalyseTotalExpenseFamily, AverageExpense }
