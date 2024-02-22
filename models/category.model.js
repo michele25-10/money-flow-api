@@ -34,7 +34,30 @@ const Category = {
         group by j.id; `;
         const result = await connFunction.query(mysql, { idf, year });
         return result;
-    }
+    },
+    selectFixedExpenseOfYear: async ({ idf, year }) => {
+        const mysql = `
+        select year (s.\`data\`) as anno, c.nome, sum(s.importo) as tot
+        from categoria c 
+        inner join spesa s on s.id_categoria =c.id 
+        inner join utente u on u.id = s.id_utente 
+        where c.spesa_fissa = 1 and u.id_famiglia = @idf and year(s.\`data\`) in (year(now()), @year)
+        group by year(s.\`data\`), c.id; 
+        `;
+        const result = await connFunction.query(mysql, { idf, year });
+        return result;
+    },
+    selectTotalFixedExpenseOfYear: async ({ idf, year }) => {
+        const mysql = `
+        select year (s.\`data\`) as anno, sum(s.importo) as totale
+        from categoria c 
+        inner join spesa s on s.id_categoria =c.id 
+        inner join utente u on u.id = s.id_utente 
+        where c.spesa_fissa = 1 and u.id_famiglia = @idf and year(s.\`data\`) in (year(now()), @year)
+        group by year(s.\`data\`); `;
+        const result = await connFunction.query(mysql, { idf, year });
+        return result;
+    },
 }
 
 module.exports = Category;
