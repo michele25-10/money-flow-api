@@ -21,7 +21,7 @@ const convertDaySql = (data) => {
     for (let i = 1; i < 8; i++) {
         const obj = {
             position: i,
-            giorno_settimana: giorniSettimana[i],
+            name: giorniSettimana[i],
             tot: 0,
         }
         result.push(obj);
@@ -65,7 +65,7 @@ const convertMonthSql = (data) => {
     for (let i = 1; i < 13; i++) {
         const obj = {
             position: i,
-            mese: mesiAnno[i],
+            name: mesiAnno[i],
             tot: 0,
         }
         result.push(obj);
@@ -103,21 +103,21 @@ const getTotalExpense = asyncHandler(async (req, res) => {
             throw new Error();
         }
 
-        response.totale = await Expense.selectTotalExpenseOfPeriod({ idf: req.user.idf, typeWeek, typeYear, year })
+        response.chartData = await Expense.selectTotalExpenseOfPeriod({ idf: req.user.idf, typeWeek, typeYear, year })
     } else {
-        response.totale = await Expense.selectTotalExpenseOfPeriod({ idu: req.user.idu, typeWeek, typeYear, year })
+        response.chartData = await Expense.selectTotalExpenseOfPeriod({ idu: req.user.idu, typeWeek, typeYear, year })
     }
 
     //Visto che il totale non ha tutti i giorni/mesi della settimana io devo ciclare 
     //l'oggetto per renderlo il più possibile adeguato al frontend
     if (typeWeek) {
         response.color = "orange";
-        response.totale = convertDaySql(response.totale);
+        response.chartData = convertDaySql(response.chartData);
     }
 
     if (typeYear) {
         response.color = "#8884d8";
-        response.totale = convertMonthSql(response.totale);
+        response.chartData = convertMonthSql(response.chartData);
     }
 
     res.status(200).send(response);
@@ -218,11 +218,11 @@ const AverageExpense = asyncHandler(async (req, res) => {
         const dataMonth = await Expense.selectAllExpenseOfPeriod({ idf: req.user.idf, typeMonth: true });
         response.month = {
             percentuage: percentuageMonth,
-            total: averageMonth[0].total,
-            data: dataMonth,
-            nome: "Famiglia",
-            cognome: "",
-            quando: "Questo mese",
+            amount: averageMonth[0].total,
+            chartData: dataMonth,
+            name: "Famiglia",
+            surname: "",
+            when: "Questo mese",
             color: "yellow",
         }
 
@@ -231,11 +231,11 @@ const AverageExpense = asyncHandler(async (req, res) => {
         const dataYear = await Expense.selectAllExpenseOfPeriod({ idf: req.user.idf, typeYear: true });
         response.year = {
             percentuage: percentuageYear,
-            total: averageYear[0].total,
-            data: dataYear,
-            nome: "Famiglia",
-            cognome: "",
-            quando: "Quest'anno",
+            amount: averageYear[0].total,
+            chartData: dataYear,
+            name: "Famiglia",
+            surname: "",
+            when: "Quest'anno",
             color: "orange"
         }
     } else {
@@ -244,11 +244,11 @@ const AverageExpense = asyncHandler(async (req, res) => {
         const dataMonth = await Expense.selectAllExpenseOfPeriod({ idu: req.user.idu, typeMonth: true });
         response.month = {
             percentuage: percentuageMonth,
-            total: averageMonth[0].total,
-            data: dataMonth,
-            nome: req.user.nome,
-            cognome: req.user.cognome,
-            quando: "Questo mese",
+            amount: averageMonth[0].total,
+            chartData: dataMonth,
+            name: req.user.nome,
+            surname: req.user.cognome,
+            when: "Questo mese",
             color: "yellow"
         }
 
@@ -257,11 +257,11 @@ const AverageExpense = asyncHandler(async (req, res) => {
         const dataYear = await Expense.selectAllExpenseOfPeriod({ idu: req.user.idu, typeYear: true });
         response.year = {
             percentuage: percentuageYear,
-            total: averageYear[0].total,
-            data: dataYear,
-            nome: req.user.nome,
-            cognome: req.user.cognome,
-            quando: "Quest'anno",
+            amount: averageYear[0].total,
+            chartData: dataYear,
+            name: req.user.nome,
+            surname: req.user.cognome,
+            when: "Quest'anno",
             color: "orange"
         }
     }

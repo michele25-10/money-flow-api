@@ -25,8 +25,9 @@ const getExpenseCategory = asyncHandler(async (req, res) => {
 
         let i = 0;
         for (const row of response.pieChart) {
-
+            row.value = row.tot;
             row.color = chartColors[i];
+            delete row.tot;
             i++;
         }
     }

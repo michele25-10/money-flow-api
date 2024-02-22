@@ -9,7 +9,7 @@ const Category = {
     },
     selectTotExpenseForCategory: async ({ idu, idf, year, limit }) => {
         const mysql = `
-        select c.id, c.nome, sum(s.importo) as tot
+        select c.id, c.nome as name, sum(s.importo) as tot
         from categoria c
         inner join spesa s on s.id_categoria = c.id
         inner join utente u on u.id = ${idu && !idf ? " @idu " : " s.id_utente "}
