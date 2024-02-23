@@ -129,5 +129,21 @@ const userInfo = asyncHandler(async (req, res) => {
     res.status(200).send(result[0]);
 });
 
+const getUserInfo = asyncHandler(async (req, res) => {
+    const response = {};
+    const result = await User.selectUserInfo({ id: req.user.idu });
 
-module.exports = { getAllUserFamily, postUser, putUser, userInfo }
+    if (result.length != 1) {
+        res.status(500);
+        throw new Error();
+    }
+
+    response.info = result[0];
+
+    response.auth = await Authorization.selectAllAuthorizationUser({ idu: req.user.idu });
+
+    res.status(200).send(response);
+});
+
+
+module.exports = { getAllUserFamily, postUser, putUser, userInfo, getUserInfo }

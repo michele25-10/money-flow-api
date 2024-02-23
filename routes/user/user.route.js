@@ -11,6 +11,6 @@ router.get("/", userController.userInfo);
 router.post("/", validate(userValidation.postUser), userController.postUser);
 router.put("/", validate(userValidation.putUser), userController.putUser);
 router.get("/family/", userController.getAllUserFamily);
-
+router.get("/info/", userController.getUserInfo);
 
 module.exports = router;

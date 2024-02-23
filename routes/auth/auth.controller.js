@@ -21,10 +21,6 @@ const loginUser = asyncHandler(async (req, res) => {
         if (hashedPassword === objUser.password) {
             const response = {};
 
-            if (objUser.dev) {
-                response.dev = objUser.dev;
-            }
-
             const accessToken = jwt.sign({
                 /* Payload incorporato all'interno del token */
                 user: {
@@ -49,15 +45,14 @@ const loginUser = asyncHandler(async (req, res) => {
 
             response.name = objUser.nome + " " + objUser.cognome;
 
-            const authUser = await Authorization.selectAllAuthorizationUser({ idu: objUser.id });
-            response.auth = authUser;
-
             if (req.body.ricordami) {
                 const credentialsString = JSON.stringify({ famiglia, email, password });
                 const hashCredentials = encrypt(credentialsString, process.env.SECRET_KEY);
                 //gli ultimi 32 caratteri corrisponderanno all'iv
                 response.ricordami = hashCredentials.encryptedText + hashCredentials.iv;
             }
+
+            response.idu = objUser.idu;
 
             res.status(200).send(response);
         } else {

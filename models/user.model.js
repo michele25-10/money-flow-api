@@ -57,7 +57,7 @@ const User = {
         return result;
     },
     selectUserInfo: async ({ id }) => {
-        const mysql = "select id, nome, cognome, telefono, email, img from utente where id=@id";
+        const mysql = "select id, nome, cognome, telefono, email, img, IF(dev=1, TRUE, FALSE) as dev, if(flag_genitore=1, TRUE, FALSE) as flag_genitore  from utente where id like @id";
         const result = await connFunction.query(mysql, {
             id
         });
