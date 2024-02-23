@@ -9,8 +9,6 @@ const { convertMonthSql } = require("../../../utils/mySqlDate");
 //@route GET /api/stats/fixed-expense/
 //@access private
 const getFixedExpenseDataOfYear = asyncHandler(async (req, res) => {
-    const response = [];
-
     const checkPermission = await isAuthorised({ idAuth: authList.speseFisse, req });
     if (!checkPermission) {
         res.status(403);
@@ -19,36 +17,46 @@ const getFixedExpenseDataOfYear = asyncHandler(async (req, res) => {
 
     const result = await Category.selectFixedExpenseOfYear({ idf: req.user.idf, year: req.query.year });
 
-    let position = 0;
+    const category = [];
+    let skip = false;
     let id = 1;
     for (const row of result) {
-        for (let i = position; i < result.length; i++) {
-            if (row.nome === result[i].nome) {
-                const obj = {
-                    id,
-                    name: row.nome
-                }
-                obj[row.anno] = row.tot;
-                obj[result[i].anno] = result[i].tot;
-
-                response.push(obj);
-                id++;
+        for (const cat of category) {
+            if (cat.name === row.nome) {
+                skip = true;
+                break;
+            } else {
+                skip = false;
             }
         }
-        position++;
+        if (!skip) {
+            category.push({ name: row.nome, id });
+        }
+        skip = true;
+        id++;
     }
 
-    const totAnno = await Category.selectTotalFixedExpenseOfYear({ idf: req.user.idf, year: req.query.year });
+    for (const row of result) {
+        for (const cat of category) {
+            if (row.nome === cat.name) {
+                cat[row.anno] = row.tot;
+                break;
+            }
+        }
+    }
 
+    const response = category;
+
+    const totAnno = await Category.selectTotalFixedExpenseOfYear({ idf: req.user.idf, year: req.query.year });
     const objTot = {
         id,
         name: "TOTALE",
     };
 
     for (const row of totAnno) {
+        objTot.id = id;
         objTot[row.name] = row.value;
     }
-
     response.push(objTot);
 
     res.status(200).send(response);
