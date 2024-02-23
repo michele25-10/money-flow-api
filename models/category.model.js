@@ -22,7 +22,7 @@ const Category = {
     },
     selectMaxCategoryExpenseForUser: async ({ idf, year }) => {
         const mysql = `
-        select j.id, j.nome_cognome, max(j.tot) as tot, j.nome, j.flag_genitore
+        select j.id, j.nome_cognome as name, max(j.tot) as amount, j.nome as type, j.flag_genitore
         from (
 	        select u.id, concat(u.nome, " ", u.cognome) as nome_cognome, sum(s.importo) as tot, c.nome, if(u.flag_genitore=1, TRUE, FALSE) as flag_genitore  
 	        from categoria c 
@@ -49,7 +49,7 @@ const Category = {
     },
     selectTotalFixedExpenseOfYear: async ({ idf, year }) => {
         const mysql = `
-        select year (s.\`data\`) as anno, sum(s.importo) as totale
+        select year (s.\`data\`) as name, sum(s.importo) as value
         from categoria c 
         inner join spesa s on s.id_categoria =c.id 
         inner join utente u on u.id = s.id_utente 

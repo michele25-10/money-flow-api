@@ -25,7 +25,7 @@ const getFixedExpenseDataOfYear = asyncHandler(async (req, res) => {
             if (row.nome === result[i].nome) {
                 const obj = {
                     id,
-                    nome: row.nome
+                    name: row.nome
                 }
                 obj[row.anno] = row.tot;
                 obj[result[i].anno] = result[i].tot;
@@ -41,11 +41,11 @@ const getFixedExpenseDataOfYear = asyncHandler(async (req, res) => {
 
     const objTot = {
         id,
-        nome: "TOTALE",
+        name: "TOTALE",
     };
 
     for (const row of totAnno) {
-        objTot[row.anno] = row.totale;
+        objTot[row.name] = row.value;
     }
 
     response.push(objTot);
@@ -53,7 +53,7 @@ const getFixedExpenseDataOfYear = asyncHandler(async (req, res) => {
     res.status(200).send(response);
 });
 
-//@desc get del totale delle spese per categoria
+//@desc get del totale delle spese per categoria negli anni in confronto
 //@route GET /api/stats/category
 //@access private
 const getTotalFixedExpenseOfYear = asyncHandler(async (req, res) => {
@@ -64,18 +64,16 @@ const getTotalFixedExpenseOfYear = asyncHandler(async (req, res) => {
         throw new Error();
     }
 
-    const totAnno = await Category.selectTotalFixedExpenseOfYear({ idf: req.user.idf, year: req.query.year });
-
-    const objTot = {};
-
-    for (const row of totAnno) {
-        objTot[row.anno] = row.totale;
+    response.chartData = await Category.selectTotalFixedExpenseOfYear({ idf: req.user.idf, year: req.query.year });
+    let i = 0;
+    for (const row of response.chartData) {
+        if (i === 0) {
+            row.color = "#8884d8";
+        } else {
+            row.color = "#ff8042";
+        }
+        i++;
     }
-
-    response.data = objTot;
-
-    console.log(response);
-
 
     res.status(200).send(response);
 });

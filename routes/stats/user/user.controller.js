@@ -19,14 +19,14 @@ const getMaxCategoryExpense = asyncHandler(async (req, res) => {
 
     const result = await Category.selectMaxCategoryExpenseForUser({ idf: req.user.idf, year })
 
-    response.genitore = [];
-    response.figlio = [];
+    response.genitori = [];
+    response.figli = [];
 
     for (const row of result) {
         if (row.flag_genitore) {
-            response.genitore.push(row);
+            response.genitori.push(row);
         } else {
-            response.figlio.push(row);
+            response.figli.push(row);
         }
     }
 
