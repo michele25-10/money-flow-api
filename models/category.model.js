@@ -58,6 +58,18 @@ const Category = {
         const result = await connFunction.query(mysql, { idf, year });
         return result;
     },
+    analyseFixedExpenseOfYear: async ({ year, idf }) => {
+        const mysql = `
+        SELECT MONTH(data) AS mese,sum(s.importo) AS tot
+        FROM spesa s 
+        inner join utente u on s.id_utente=u.id 
+        inner join categoria c on c.id = s.id_categoria and c.spesa_fissa=1
+        WHERE YEAR(s.data)=@year AND u.id_famiglia=@idf  
+        GROUP BY MONTH(s.data)
+        ORDER BY mese;`;
+        const result = await connFunction.query(mysql, { year, idf });
+        return result;
+    }
 }
 
 module.exports = Category;

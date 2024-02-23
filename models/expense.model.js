@@ -3,8 +3,6 @@ const moment = require('moment');
 
 const Expense = {
     insertExpense: async ({ luogo, data, descrizione, importo, tipoPagamento: tipo_pagamento, categoria: id_categoria, documento, idu: id_utente }) => {
-
-
         const result = await connFunction.insert("spesa", {
             luogo,
             data: moment(data).format('YYYY-MM-DD'),

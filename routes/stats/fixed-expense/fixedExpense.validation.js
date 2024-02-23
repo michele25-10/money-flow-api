@@ -12,5 +12,10 @@ const getTotalFixedExpenseOfYear = {
     }),
 };
 
+const analyseFixedExpenseOfYear = {
+    query: Joi.object().keys({
+        year: Joi.number().integer().required(),
+    }),
+};
 
-module.exports = { getFixedExpenseDataOfYear, getTotalFixedExpenseOfYear };
+module.exports = { getFixedExpenseDataOfYear, getTotalFixedExpenseOfYear, analyseFixedExpenseOfYear };
