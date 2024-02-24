@@ -41,7 +41,8 @@ const getExpenseById = {
 
 const getAllExpense = {
     query: Joi.object().keys({
-        limit: Joi.number().integer()
+        limit: Joi.number().integer(),
+        year: Joi.number().integer(),
     })
 };
 

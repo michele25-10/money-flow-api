@@ -114,7 +114,9 @@ const getExpenseById = asyncHandler(async (req, res) => {
 //@access private
 const getAllExpense = asyncHandler(async (req, res) => {
     const limit = req.query.limit || false;
-    const result = await Expense.selectAllExpense({ idu: req.user.idu, flagGenitore: req.user.genitore, idf: req.user.idf, limit });
+    const year = req.query.year || false;
+
+    const result = await Expense.selectAllExpense({ idu: req.user.idu, flagGenitore: req.user.genitore, idf: req.user.idf, limit, year });
 
     res.status(200).send(result);
 });
