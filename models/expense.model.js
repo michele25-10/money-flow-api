@@ -99,7 +99,7 @@ const Expense = {
         const result = await connFunction.query(mysql, { idf, year });
         return result;
     },
-    selectAverageExpenseOfPeriod: async ({ idu, idf, typeYear, typeMonth }) => {
+    selectAverageExpenseOfPeriod: async ({ idu, idf, typeYear, typeMonth, year }) => {
         let mysql = "";
         if (typeMonth) {
             mysql = `
@@ -116,20 +116,20 @@ const Expense = {
         } else if (typeYear) {
             mysql = `
             SELECT 
-                AVG(CASE WHEN YEAR(s.\`data\`) = YEAR(NOW()) THEN s.importo END) AS current_average,
-                AVG(CASE WHEN YEAR(s.\`data\`) = YEAR(NOW()) - 1 THEN s.importo END) AS last_average,
-                SUM(CASE WHEN YEAR(s.\`data\`) = YEAR(NOW()) THEN s.importo END) AS total
+                AVG(CASE WHEN YEAR(s.\`data\`) = ${year ? " @year " : " YEAR(NOW()) "} THEN s.importo END) AS current_average,
+                AVG(CASE WHEN YEAR(s.\`data\`) = ${year ? " (@year - 1)" : " YEAR(NOW()) - 1 "} THEN s.importo END) AS last_average,
+                SUM(CASE WHEN YEAR(s.\`data\`) = ${year ? " @year " : " YEAR(NOW()) "} THEN s.importo END) AS total
             from
                 spesa s
             inner join utente u 
                 on u.id = s.id_utente 
             WHERE
-                YEAR(s.\`data\`) IN (YEAR(NOW()), YEAR(NOW()) - 1) ${idu ? "and s.id_utente like @idu" : ""} ${idf ? "and u.id_famiglia = @idf" : ""};`;
+                YEAR(s.\`data\`) IN (${year ? " @year, (@year - 1) " : " YEAR(NOW()), YEAR(NOW()) - 1 "}) ${idu ? "and s.id_utente like @idu" : ""} ${idf ? "and u.id_famiglia = @idf" : ""};`;
         }
-        const result = await connFunction.query(mysql, { idu, idf });
+        const result = await connFunction.query(mysql, { idu, idf, year });
         return result;
     },
-    selectAllExpenseOfPeriod: async ({ idu, idf, typeYear, typeMonth }) => {
+    selectAllExpenseOfPeriod: async ({ idu, idf, typeYear, typeMonth, year }) => {
         let mysql = "";
         if (typeMonth) {
             mysql = `
@@ -139,18 +139,18 @@ const Expense = {
             WHERE
                 s.\`data\` BETWEEN DATE_SUB(NOW(), INTERVAL 1 MONTH) AND NOW() ${idu ? "and s.id_utente like @idu" : ""} ${idf ? "and u.id_famiglia = @idf" : ""}
             group by s.\`data\`
-            order by s.\`data\` desc;`;
+            order by s.\`data\` asc;`;
         } else if (typeYear) {
             mysql = `
             SELECT s.data, s.importo    
             FROM spesa s
             inner join utente u on u.id = s.id_utente 
             WHERE 
-                YEAR(s.\`data\`)=YEAR(NOW()) ${idu ? "and s.id_utente like @idu" : ""} ${idf ? "and u.id_famiglia = @idf" : ""}
+                YEAR(s.\`data\`)=${year ? " @year " : " YEAR(NOW()) "}  ${idu ? "and s.id_utente like @idu" : ""} ${idf ? "and u.id_famiglia = @idf" : ""}
             group by s.\`data\`
-            order by s.\`data\` desc;`;
+            order by s.\`data\` asc;`;
         }
-        const result = await connFunction.query(mysql, { idu, idf });
+        const result = await connFunction.query(mysql, { idu, idf, year });
         return result;
     }
 }

@@ -124,7 +124,7 @@ const calculatePercentuage = (lastAverage, currentAverage) => {
 //@access private
 const AverageExpense = asyncHandler(async (req, res) => {
     let response = {};
-    const year = req.query.year ? req.query.year : new Date().getFullYear();
+    const year = req.query.year || false;
 
     if (req.query.dashboard) {
         const checkPermission = await isAuthorised({ idAuth: authList.dashboard, req });
@@ -146,9 +146,9 @@ const AverageExpense = asyncHandler(async (req, res) => {
             color: "yellow",
         }
 
-        const averageYear = await Expense.selectAverageExpenseOfPeriod({ idf: req.user.idf, typeYear: true });
+        const averageYear = await Expense.selectAverageExpenseOfPeriod({ idf: req.user.idf, typeYear: true, year });
         const percentuageYear = calculatePercentuage(averageYear[0].last_average, averageYear[0].current_average);
-        const dataYear = await Expense.selectAllExpenseOfPeriod({ idf: req.user.idf, typeYear: true });
+        const dataYear = await Expense.selectAllExpenseOfPeriod({ idf: req.user.idf, typeYear: true, year });
         response.year = {
             percentuage: percentuageYear,
             amount: averageYear[0].total,
@@ -172,9 +172,9 @@ const AverageExpense = asyncHandler(async (req, res) => {
             color: "yellow"
         }
 
-        const averageYear = await Expense.selectAverageExpenseOfPeriod({ idu: req.user.idu, typeYear: true });
+        const averageYear = await Expense.selectAverageExpenseOfPeriod({ idu: req.user.idu, typeYear: true, year });
         const percentuageYear = calculatePercentuage(averageYear[0].last_average, averageYear[0].current_average);
-        const dataYear = await Expense.selectAllExpenseOfPeriod({ idu: req.user.idu, typeYear: true });
+        const dataYear = await Expense.selectAllExpenseOfPeriod({ idu: req.user.idu, typeYear: true, year });
         response.year = {
             percentuage: percentuageYear,
             amount: averageYear[0].total,
