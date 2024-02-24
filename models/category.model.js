@@ -11,9 +11,9 @@ const Category = {
         const mysql = `
         select c.id, c.nome as name, sum(s.importo) as tot
         from categoria c
-        inner join spesa s on s.id_categoria = c.id
-        inner join utente u on u.id = ${idu && !idf ? " @idu " : " s.id_utente "}
-        where c.spesa_fissa=0 and year(s.\`data\`)=@year ${idf && !idu ? " AND u.id_famiglia=@idf " : ""}
+        inner join spesa s on s.id_categoria = c.id ${idu ? " AND s.id_utente like @idu " : ""}
+        inner join utente u on u.id = s.id_utente
+        where c.spesa_fissa=0 and year(s.\`data\`)=@year ${idf ? " AND u.id_famiglia=@idf " : ""}
         group by c.id
         order by tot desc
         ${limit ? " limit @limit " : ""}`;
