@@ -34,12 +34,15 @@ create table utente (
     	on delete cascade
 );
 
+DELIMITER $$
 CREATE TRIGGER before_insert_utente
 BEFORE INSERT ON utente
 FOR EACH ROW
 BEGIN
     SET NEW.id = UUID();
 END;
+$$
+DELIMITER ;
 
 create table log(
     id int unsigned not null auto_increment primary key, 
@@ -93,7 +96,7 @@ create table autorizzazione_utente(
 	FOREIGN KEY (id_utente)
     	REFERENCES utente(id)
     	on delete cascade,
-		FOREIGN KEY (id_autorizzazione)
-    	REFERENCES autorizzazione(id)
-    	on delete cascade
+	FOREIGN KEY (id_autorizzazione)
+    REFERENCES autorizzazione(id)
+	on delete cascade
 );
