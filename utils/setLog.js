@@ -10,7 +10,7 @@ const { tipoOperazioni } = require('../enums/tipo_operazioni');
 * @param messaggioErrore
 */
 const setLogOperazione = async ({ idu, tipoOperazione, ipAddress, token, body, messaggioErrore, tabella }) => {
-    if (tipoOperazione === tipoOperazioni.login) {
+    if (tipoOperazione === "non voglio che inserisca i log") {
         await Log.setLog(idu, tipoOperazione, ipAddress, token, JSON.stringify(body), messaggioErrore, tabella);
     }
     return;
