@@ -133,7 +133,7 @@ const Expense = {
         let mysql = "";
         if (typeMonth) {
             mysql = `
-            SELECT s.data, s.importo    
+            SELECT s.data, sum(s.importo) as importo
             FROM spesa s 
             inner join utente u on u.id = s.id_utente 
             WHERE
@@ -142,7 +142,7 @@ const Expense = {
             order by s.\`data\` asc;`;
         } else if (typeYear) {
             mysql = `
-            SELECT s.data, s.importo    
+            SELECT s.data, sum(s.importo) as importo
             FROM spesa s
             inner join utente u on u.id = s.id_utente 
             WHERE 
