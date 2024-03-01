@@ -104,9 +104,9 @@ const Expense = {
         if (typeMonth) {
             mysql = `
             SELECT 
-                AVG(CASE WHEN s.\`data\` BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01') AND NOW() THEN s.importo  END) AS current_average,
+                AVG(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH) AND now() THEN s.importo  END) AS current_average,
                 AVG(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 2 MONTH) AND DATE_SUB(NOW(), INTERVAL 1 MONTH) THEN s.importo END) AS last_average,
-                SUM(CASE WHEN s.\`data\` BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01') AND NOW() THEN s.importo  END) AS total
+                SUM(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH) AND NOW() THEN s.importo  END) AS total
             FROM 
                 spesa s
             inner join utente u 
