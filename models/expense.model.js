@@ -24,7 +24,7 @@ const Expense = {
             tipo_pagamento,
             id_categoria,
             documento,
-            id_utente
+            //id_utente
         }, "id=@id", {
             id
         }
