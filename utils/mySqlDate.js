@@ -1,12 +1,12 @@
 const giorniSettimana = [
     "",
+    "D",
     "L",
     "M",
     "M",
     "G",
     "V",
     "S",
-    "D"
 ];
 
 const convertDaySql = (data) => {
