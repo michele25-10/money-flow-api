@@ -70,7 +70,7 @@ const Expense = {
         let mysql = "";
         if (typeWeek) {
             mysql = `
-            SELECT DAYOFWEEK(s.data) as giorno_settimana, sum(s.importo) AS tot
+            SELECT DAYOFWEEK(s.data) as giorno_settimana, ROUND(sum(s.importo), 2) AS tot
             FROM spesa s 
             inner join utente u on s.id_utente=u.id 
             WHERE YEARWEEK(s.data) = YEARWEEK(NOW()) ${idf ? " AND u.id_famiglia=@idf " : ""} ${idu ? " AND s.id_utente=@idu " : ""}
@@ -78,7 +78,7 @@ const Expense = {
             ORDER BY giorno_settimana`;
         } else if (typeYear) {
             mysql = `
-            SELECT MONTH(data) AS mese,sum(s.importo) AS tot
+            SELECT MONTH(data) AS mese, ROUND(sum(s.importo), 2) AS tot
             FROM spesa s 
             inner join utente u on s.id_utente=u.id 
             WHERE YEAR(s.data) = @year ${idf ? " AND u.id_famiglia=@idf " : ""} ${idu ? " AND s.id_utente=@idu " : ""}
@@ -91,7 +91,7 @@ const Expense = {
     },
     selectAllExpenseFamilyYear: async ({ idf, year }) => {
         let mysql = `
-        select u.id, concat(u.nome, " ", u.cognome) as name, sum(s.importo) as value
+        select u.id, concat(u.nome, " ", u.cognome) as name, ROUND(sum(s.importo), 2) as value
         from spesa s 
         inner join utente u on u.id = s.id_utente 
         where year(s.\`data\`)=@year and u.id_famiglia=@idf
@@ -104,9 +104,9 @@ const Expense = {
         if (typeMonth) {
             mysql = `
             SELECT 
-                AVG(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH) AND now() THEN s.importo  END) AS current_average,
-                AVG(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 2 MONTH) AND DATE_SUB(NOW(), INTERVAL 1 MONTH) THEN s.importo END) AS last_average,
-                SUM(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH) AND NOW() THEN s.importo  END) AS total
+            ROUND(AVG(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH) AND now() THEN s.importo  END), 2) AS current_average,
+            ROUND(AVG(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 2 MONTH) AND DATE_SUB(NOW(), INTERVAL 1 MONTH) THEN s.importo END), 2) AS last_average,
+            ROUND(SUM(CASE WHEN s.\`data\` BETWEEN DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH) AND NOW() THEN s.importo  END), 2) AS total
             FROM 
                 spesa s
             inner join utente u 
@@ -116,9 +116,9 @@ const Expense = {
         } else if (typeYear) {
             mysql = `
             SELECT 
-                AVG(CASE WHEN YEAR(s.\`data\`) = ${year ? " @year " : " YEAR(NOW()) "} THEN s.importo END) AS current_average,
-                AVG(CASE WHEN YEAR(s.\`data\`) = ${year ? " (@year - 1)" : " YEAR(NOW()) - 1 "} THEN s.importo END) AS last_average,
-                SUM(CASE WHEN YEAR(s.\`data\`) = ${year ? " @year " : " YEAR(NOW()) "} THEN s.importo END) AS total
+            ROUND(AVG(CASE WHEN YEAR(s.\`data\`) = ${year ? " @year " : " YEAR(NOW()) "} THEN s.importo END), 2) AS current_average,
+            ROUND(AVG(CASE WHEN YEAR(s.\`data\`) = ${year ? " (@year - 1)" : " YEAR(NOW()) - 1 "} THEN s.importo END), 2) AS last_average,
+            ROUND(SUM(CASE WHEN YEAR(s.\`data\`) = ${year ? " @year " : " YEAR(NOW()) "} THEN s.importo END), 2) AS total
             from
                 spesa s
             inner join utente u 
@@ -133,7 +133,7 @@ const Expense = {
         let mysql = "";
         if (typeMonth) {
             mysql = `
-            SELECT s.data, sum(s.importo) as importo
+            SELECT s.data,  ROUND(sum(s.importo), 2) as importo
             FROM spesa s 
             inner join utente u on u.id = s.id_utente 
             WHERE
@@ -142,7 +142,7 @@ const Expense = {
             order by s.\`data\` asc;`;
         } else if (typeYear) {
             mysql = `
-            SELECT s.data, sum(s.importo) as importo
+            SELECT s.data, ROUND(sum(s.importo), 2) as importo
             FROM spesa s
             inner join utente u on u.id = s.id_utente 
             WHERE 
