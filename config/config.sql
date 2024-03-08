@@ -40,4 +40,5 @@ values ("Enel Gas", 1),
 ("Carburante", 0),
 ("Sport", 0),
 ("Tecnologia", 0),
-("Regali", 0); 
+("Regali", 0),
+("Cura di sè", 0); 
