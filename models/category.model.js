@@ -29,9 +29,9 @@ const Category = {
 	        inner join spesa s on s.id_categoria = c.id 
 	        inner join utente u on u.id = s.id_utente 
 	        where u.id_famiglia = @idf and YEAR(s.\`data\`) = @year and c.spesa_fissa=0
-	        group by c.id, u.id
+	        group by c.id, u.id, u.nome, u.cognome, c.nome, u.flag_genitore
         ) j
-        group by j.id; `;
+        group by j.id, j.nome_cognome, j.nome, j.flag_genitore; `;
         const result = await connFunction.query(mysql, { idf, year });
         return result;
     },

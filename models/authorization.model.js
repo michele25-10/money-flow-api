@@ -12,7 +12,8 @@ const Authorization = {
         return result;
     },
     updateAuthorizationUser: async ({ idu, idAuthorization, valore }) => {
-        const result = await connFunction.update("autorizzazione_utente", { valore }, "id_utente=@idu and id_autorizzazione=@idAuthorization", { idu, idAuthorization },);
+        const result = await connFunction.update("autorizzazione_utente", { valore: valore ? 1 : 0 }, "id_utente=@idu and id_autorizzazione=@idAuthorization", { idu, idAuthorization },);
+        console.log(result);
         return result;
     },
     insertAuthorizationUser: async ({ id_utente, id_autorizzazione, valore }) => {
