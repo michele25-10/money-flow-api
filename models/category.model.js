@@ -1,5 +1,4 @@
 const connFunction = require('../utils/executeMySql');
-const moment = require('moment');
 
 const Category = {
     selectAllCategory: async ({ flagGenitore }) => {
@@ -9,7 +8,7 @@ const Category = {
     },
     selectTotExpenseForCategory: async ({ idu, idf, year, limit }) => {
         const mysql = `
-        select c.id, c.nome as name, sum(s.importo) as tot
+        select c.id, c.nome as name, ROUND(sum(s.importo), 2) as tot
         from categoria c
         inner join spesa s on s.id_categoria = c.id ${idu ? " AND s.id_utente like @idu " : ""}
         inner join utente u on u.id = s.id_utente
@@ -24,7 +23,7 @@ const Category = {
         const mysql = `
         select j.id, j.nome_cognome as name, max(j.tot) as amount, j.nome as type, j.flag_genitore
         from (
-	        select u.id, concat(u.nome, " ", u.cognome) as nome_cognome, sum(s.importo) as tot, c.nome, if(u.flag_genitore=1, TRUE, FALSE) as flag_genitore  
+	        select u.id, concat(u.nome, " ", u.cognome) as nome_cognome, ROUND(sum(s.importo), 2) as tot, c.nome, if(u.flag_genitore=1, TRUE, FALSE) as flag_genitore  
 	        from categoria c 
 	        inner join spesa s on s.id_categoria = c.id 
 	        inner join utente u on u.id = s.id_utente 
