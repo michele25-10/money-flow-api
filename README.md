@@ -28,3 +28,52 @@ L'utente potrà anche scaricare dei pdf o file excel con le spese di ogni mese, 
 ## Errore
 
 Per la gestione degli errori è stato usato il middleware errorHandler, quest'ultimo viene eseguito quando viene lanciata una eccezione all'interno del codice; se poi lo status della risposta è di particolari tipi all'ora invia un errore particolare.
+
+---
+
+# Deploy minikube
+
+### Attiazione service db
+
+```sh
+cd config
+
+# creo docker image
+docker build -t my-mysql:1 .
+
+# creo un docker container eseguibile dall'host
+docker run -p 3306:3306 my-mysql:1
+
+docker login
+docker tag my-mysql:1 <username>/my-mysql:1
+docker push <username>/my-mysql:1
+
+kubectl apply -f mysql-deployment.yaml
+kubectl apply -f mysql-service.yaml
+
+# Espongo il servizio
+minikube service mysql-service
+```
+
+### Attivazione service node
+
+```sh
+cd config
+
+# creo docker image
+docker build -t my-node:1 .
+
+# creo un docker container eseguibile dall'host
+docker run -p 5000:5000 my-node:1
+
+docker login
+docker tag my-node:1 <username>/my-node:1
+docker push <username>/my-node:1
+
+kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-hpa.yaml
+kubectl apply -f backend-service.yaml
+
+# Espongo il servizio
+minikube service backend-service
+```
