@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e  # Interrompe l'esecuzione se un comando fallisce
 
-MYSQL_ROOT_PASSWORD=""
+MYSQL_ROOT_PASSWORD="root"
 MYSQL_DATABASE="moneyFlow"
 
 echo "Avvio inizializzazione MySQL personalizzata..."
