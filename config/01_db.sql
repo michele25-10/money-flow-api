@@ -1,46 +1,40 @@
-create database moneyFlow; 
-
-use moneyFlow; 
+-- Crea il database se non esiste
+CREATE DATABASE IF NOT EXISTS moneyFlow;
+USE moneyFlow;
 
 -- Creazione utente solo se non esiste
 CREATE USER IF NOT EXISTS 'web'@'%' IDENTIFIED BY 'web';
--- Concedi solo SELECT, INSERT, UPDATE, DELETE su tutte le tabelle del database moneyFlow
 GRANT SELECT, INSERT, UPDATE, DELETE ON moneyFlow.* TO 'web'@'%';
 FLUSH PRIVILEGES;
 
-
-create table famiglia(
-    id INT UNSIGNED NOT NULL   AUTO_INCREMENT  PRIMARY key,
-    nome varchar(30) unique not null, 
-    n_componenti int not null, 
-    utente_mongo_db varchar(60) null, 
-    ip_mongo_db varchar(15) null, 
-    password_mongo_db varchar(60) null
+-- Creazione tabelle
+CREATE TABLE IF NOT EXISTS famiglia(
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(30) UNIQUE NOT NULL, 
+    n_componenti INT NOT NULL, 
+    utente_mongo_db VARCHAR(60) NULL, 
+    ip_mongo_db VARCHAR(15) NULL, 
+    password_mongo_db VARCHAR(60) NULL
 );
 
-/*CREATE PROCEDURE generateUUID()
-BEGIN
-    DECLARE new_uuid CHAR(36);
-    SET new_uuid = UUID();
-    update utente set id = new_uuid where id = new.id;
-end;*/
-
-create table utente (
-	id char(36) primary key,
-	nome varchar(30) not null, 
-	cognome varchar(30) not null, 
-	email varchar(50) not null, 
-	password varchar(64) not null, 
-	telefono varchar(10) not null, 
-	img BLOB null,
-	flag_genitore bit default 0 not null,
-	dev bit default 0 not null,
-	id_famiglia int unsigned not null,
-	FOREIGN KEY (id_famiglia)
-    	REFERENCES famiglia(id)
-    	on delete cascade
+CREATE TABLE IF NOT EXISTS utente (
+    id CHAR(36) PRIMARY KEY,
+    nome VARCHAR(30) NOT NULL, 
+    cognome VARCHAR(30) NOT NULL, 
+    email VARCHAR(50) NOT NULL, 
+    password VARCHAR(64) NOT NULL, 
+    telefono VARCHAR(10) NOT NULL, 
+    img BLOB NULL,
+    flag_genitore BIT DEFAULT 0 NOT NULL,
+    dev BIT DEFAULT 0 NOT NULL,
+    id_famiglia INT UNSIGNED NOT NULL,
+    FOREIGN KEY (id_famiglia)
+        REFERENCES famiglia(id)
+        ON DELETE CASCADE
 );
 
+-- Trigger idempotente: elimina prima se esiste
+DROP TRIGGER IF EXISTS before_insert_utente;
 DELIMITER $$
 CREATE TRIGGER before_insert_utente
 BEFORE INSERT ON utente
@@ -51,59 +45,59 @@ END;
 $$
 DELIMITER ;
 
-create table log(
-    id int unsigned not null auto_increment primary key, 
-	id_utente char(36) not null,
-	tipo_operazione varchar(30) not null,
-    ip_address varchar(15), 
-	dataora datetime not null,
-    token varchar(255) null,
-    body JSON null,
-	tabella varchar(30) null, 
-	messaggio_errore varchar(100) null, 
-	FOREIGN KEY (id_utente)
-    	REFERENCES utente(id)
-    	on delete cascade
+CREATE TABLE IF NOT EXISTS log(
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+    id_utente CHAR(36) NOT NULL,
+    tipo_operazione VARCHAR(30) NOT NULL,
+    ip_address VARCHAR(15), 
+    dataora DATETIME NOT NULL,
+    token VARCHAR(255) NULL,
+    body JSON NULL,
+    tabella VARCHAR(30) NULL, 
+    messaggio_errore VARCHAR(100) NULL, 
+    FOREIGN KEY (id_utente)
+        REFERENCES utente(id)
+        ON DELETE CASCADE
 );
 
-create table categoria(
-	id INT UNSIGNED NOT null AUTO_INCREMENT  PRIMARY key,
-	nome varchar(30) not null,
-	spesa_fissa bit not null
+CREATE TABLE IF NOT EXISTS categoria(
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(30) NOT NULL,
+    spesa_fissa BIT NOT NULL
 );
 
-create table spesa(
-	id INT UNSIGNED NOT NULL   AUTO_INCREMENT  PRIMARY key,
-	id_utente char(36) not null, 
-	luogo varchar(100),
-	data date not null, 
-	descrizione varchar(100),
-	importo double not null, 
-	tipo_pagamento int not null,
-	id_categoria int unsigned not null,
-	documento BLOB, 
-	FOREIGN KEY (id_utente)
-    	REFERENCES utente(id)
-    	on delete cascade,
-	FOREIGN KEY (id_categoria)
-    	REFERENCES categoria(id)
+CREATE TABLE IF NOT EXISTS spesa(
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_utente CHAR(36) NOT NULL, 
+    luogo VARCHAR(100),
+    data DATE NOT NULL, 
+    descrizione VARCHAR(100),
+    importo DOUBLE NOT NULL, 
+    tipo_pagamento INT NOT NULL,
+    id_categoria INT UNSIGNED NOT NULL,
+    documento BLOB, 
+    FOREIGN KEY (id_utente)
+        REFERENCES utente(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (id_categoria)
+        REFERENCES categoria(id)
 );
 
-create table autorizzazione(
-	id INT UNSIGNED NOT null AUTO_INCREMENT  PRIMARY key,
-	nome varchar(30) not null,
-	descrizione varchar(60) null
+CREATE TABLE IF NOT EXISTS autorizzazione(
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(30) NOT NULL,
+    descrizione VARCHAR(60) NULL
 );
 
-create table autorizzazione_utente(
-	id INT UNSIGNED NOT null AUTO_INCREMENT  PRIMARY key,
-	id_utente char(36) not null, 
-	id_autorizzazione int unsigned not null, 
-	valore bit default 0 not null,
-	FOREIGN KEY (id_utente)
-    	REFERENCES utente(id)
-    	on delete cascade,
-	FOREIGN KEY (id_autorizzazione)
-    REFERENCES autorizzazione(id)
-	on delete cascade
+CREATE TABLE IF NOT EXISTS autorizzazione_utente(
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_utente CHAR(36) NOT NULL, 
+    id_autorizzazione INT UNSIGNED NOT NULL, 
+    valore BIT DEFAULT 0 NOT NULL,
+    FOREIGN KEY (id_utente)
+        REFERENCES utente(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (id_autorizzazione)
+        REFERENCES autorizzazione(id)
+        ON DELETE CASCADE
 );
