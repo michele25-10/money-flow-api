@@ -48,6 +48,8 @@ docker login
 docker tag my-mysql:1 <username>/my-mysql:1
 docker push <username>/my-mysql:1
 
+kubectl apply -f mysql-pv.yaml
+kubectl apply -f mysql-pvc.yaml
 kubectl apply -f mysql-deployment.yaml
 kubectl apply -f mysql-service.yaml
 
