@@ -58,8 +58,6 @@ minikube service mysql-service
 ### Attivazione service node
 
 ```sh
-cd config
-
 # creo docker image
 docker build -t my-node:1 .
 
