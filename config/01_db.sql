@@ -2,6 +2,13 @@ create database moneyFlow;
 
 use moneyFlow; 
 
+-- Creazione utente solo se non esiste
+CREATE USER IF NOT EXISTS 'web'@'%' IDENTIFIED BY 'web';
+-- Concedi solo SELECT, INSERT, UPDATE, DELETE su tutte le tabelle del database moneyFlow
+GRANT SELECT, INSERT, UPDATE, DELETE ON moneyFlow.* TO 'web'@'%';
+FLUSH PRIVILEGES;
+
+
 create table famiglia(
     id INT UNSIGNED NOT NULL   AUTO_INCREMENT  PRIMARY key,
     nome varchar(30) unique not null, 

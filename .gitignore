@@ -4,7 +4,9 @@
 
 # === Rule for dotfiles ===
 # Ignore all dotfiles.
+.env
 .*
+
 # Exclude specific dotfiles that we want to track.
 !deps/**/.*
 !.devcontainer/
