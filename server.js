@@ -9,23 +9,31 @@ const app = express();
 app.use(
   cors({
     origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Consenti solo questi metodi HTTP
-    allowedHeaders: ["Content-Type", "Authorization"], // Consenti solo questi header
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-const port = process.env.PORT || 5000; //prendo la porta dal file .env
+const port = process.env.PORT || 5000;
 
-//middleware
+// Middleware per loggare ogni richiesta
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+// Middleware per parsare il JSON
 app.use(express.json());
 
+// Health check
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+// Rotte API
 app.use("/api", require("./routes/index.route"));
 
-//middleware degli errori
+// Middleware degli errori
 app.use(errorHandler);
 
 app.listen(port, () => {
