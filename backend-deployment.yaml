@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: michelegabrieli/my-node:1
+          image: michelegabrieli/my-node:latest
           ports:
             - containerPort: 5000
           resources:
