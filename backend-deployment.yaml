@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: michelegabrieli/my-node:latest
+          image: docker.io/michelegabrieli/my-node:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
