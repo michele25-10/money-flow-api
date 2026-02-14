@@ -18,6 +18,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: backend-secret
           resources:
             requests:
               memory: "256Mi"
