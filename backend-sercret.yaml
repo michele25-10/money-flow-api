@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secret
+type: Opaque
+data:
+  ACCESS_TOKEN_SECRET: Z2FicmllbGlmYW1pbHlhbmRmZXJyYXJlc2lmYW1pbHkxMjM0NTY3ODkw
+  SECRET_KEY: UVdFUlRZMTIzNDU2
+  DBHOST: bXlzcWwtc2VydmljZQ==
+  DBUSERNAME: d2Vi
+  DBPASSWORD: d2Vi
+  DB: bW9uZXlGbG93
+  PORT: NTAwMA==
+  NODE_ENV: cHJvZHVjdGlvbg==
