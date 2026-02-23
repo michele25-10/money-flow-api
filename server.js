@@ -3,6 +3,7 @@ const cors = require("cors");
 require("express-async-errors");
 const errorHandler = require("./middleware/errorHandler");
 require("dotenv").config();
+const client = require("prom-client");
 
 const app = express();
 
@@ -11,7 +12,7 @@ app.use(
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 const port = process.env.PORT || 5000;
@@ -32,6 +33,16 @@ app.get("/health", (req, res) => {
 
 // Rotte API
 app.use("/api", require("./routes/index.route"));
+
+// Raccoglie metriche di default (CPU, memoria, event loop ecc.)
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
+
+// Endpoint /metrics per Prometheus
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
+});
 
 // Middleware degli errori
 app.use(errorHandler);
