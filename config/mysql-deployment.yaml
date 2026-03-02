@@ -44,7 +44,7 @@ spec:
               name: mysql-persistent-storage
 
         - name: mysql-exporter
-          image: prom/mysqld-exporter:v0.15.1
+          image: docker.io/prom/mysqld-exporter:v0.15.1
           args:
             - "--config.my-cnf=/etc/mysql/exporter.cnf"
             - "--collect.info_schema.tables"
