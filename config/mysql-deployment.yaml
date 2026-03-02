@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-deployment
+  namespace: default
   labels:
     app: mysql
 spec:
@@ -24,24 +25,44 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
                   key: MYSQL_ROOT_PASSWORD
+                  name: mysql-secret
             - name: MYSQL_DATABASE
-              value: "moneyFlow"
+              value: moneyFlow
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
                   key: MYSQL_USER
+                  name: mysql-secret
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
                   key: MYSQL_PASSWORD
+                  name: mysql-secret
           volumeMounts:
-            - name: mysql-persistent-storage
-              mountPath: /var/lib/mysql
+            - mountPath: /var/lib/mysql
+              name: mysql-persistent-storage
+
+        - name: mysql-exporter
+          image: prom/mysqld-exporter:v0.15.1
+          args:
+            - "--config.my-cnf=/etc/mysql/exporter.cnf"
+            - "--collect.info_schema.tables"
+            - "--collect.info_schema.innodb_metrics"
+            - "--collect.global_status"
+            - "--collect.global_variables"
+            - "--collect.slave_status"
+          ports:
+            - name: metrics
+              containerPort: 9104
+          volumeMounts:
+            - name: exporter-config
+              mountPath: /etc/mysql
+
       volumes:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
             claimName: mysql-pv-claim
+        - name: exporter-config
+          configMap:
+            name: mysql-exporter-config

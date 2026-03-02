@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-exporter-config
+  namespace: default
+data:
+  exporter.cnf: |
+    [client]
+    user=exporter
+    password=exporter
+    host=localhost
+    port=3306
