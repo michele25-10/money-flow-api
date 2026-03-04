@@ -10,16 +10,24 @@ const httpRequestDurationMicroseconds = new client.Histogram({
   buckets: [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 10],
 });
 
-// Esportiamo il middleware e il registro
+// Aggiunto: contatore richieste totali
+const httpRequestsTotal = new client.Counter({
+  name: "http_requests_total",
+  help: "Numero totale di richieste HTTP",
+  labelNames: ["method", "route", "code"],
+});
+
 module.exports = {
   metricsMiddleware: (req, res, next) => {
     const end = httpRequestDurationMicroseconds.startTimer();
     res.on("finish", () => {
-      end({
+      const labels = {
         method: req.method,
         route: req.route ? req.route.path : req.path,
         code: res.statusCode,
-      });
+      };
+      end(labels);
+      httpRequestsTotal.inc(labels); // Aggiunto
     });
     next();
   },
